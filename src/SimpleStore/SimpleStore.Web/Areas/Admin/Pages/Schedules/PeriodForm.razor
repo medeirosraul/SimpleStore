@@ -1,0 +1,95 @@
+﻿@using SimpleStore.Core.Services.Schedules
+@using SimpleStore.Web.Areas.Admin.Models.Schedules
+@inject IPeriodProvider PeriodProvider
+
+@{
+    var periodCounter = 1;
+}
+
+@foreach(var period in Periods)
+{
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="text-muted label-offset">Período #@periodCounter</h5>
+
+            <FormTimeRange @bind-From="period.Init" @bind-To="period.End" Label="Horário"></FormTimeRange>
+            <FormField @bind-Value="period.Granularity" Label="Granulidade"></FormField>
+
+            
+            @if(period.Init < period.End && period.Granularity > 0)
+            {
+                <div class="row">
+                    <label class="col-form-label text-sm-end inline">Horários disponíveis</label>
+                    <div class="pt-1 col-12 col-sm input-container">
+                        @foreach(var time in PeriodProvider.CalculateAvailableTimes(period.Init, period.End, period.Granularity))
+                        {
+                            <span class="col-auto pill me-2 mb-2">@($"{time.ToString("HH:mm")}")</span>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if(Periods.Count > 1) 
+            {
+                <button type="button" class="btn btn-link text-danger label-offset" @onclick="@(async () => await RemovePeriod(period))">Remover</button>
+            }
+        </div>
+    </div>
+
+    periodCounter++;
+}
+
+<div class="card">
+    <div class="card-body">
+        <button type="button" class="btn btn-primary label-offset" @onclick="ApplyPeriod">Aplicar configuração</button>
+        <button type="button" class="btn btn-light ms-2" @onclick="AddPeriod">Adicionar período</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICollection<SchedulePeriodViewModel> Periods { get; set; }
+
+    [Parameter]
+    public EventCallback<ICollection<SchedulePeriodViewModel>> PeriodsChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<ICollection<SchedulePeriodViewModel>> OnApply { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Periods == null)
+        {
+            await AddPeriod();
+        }
+    }
+
+    private async Task AddPeriod()
+    {
+        Periods ??= new List<SchedulePeriodViewModel>();
+        Periods.Add(CreatePeriod());
+
+        await PeriodsChanged.InvokeAsync(Periods);
+    }
+
+    private async Task RemovePeriod(SchedulePeriodViewModel period)
+    {
+        Periods.Remove(period);
+        await PeriodsChanged.InvokeAsync(Periods);
+    }
+
+    private async Task ApplyPeriod()
+    {
+        await OnApply.InvokeAsync(Periods);
+    }
+
+    private SchedulePeriodViewModel CreatePeriod()
+    {
+        return new SchedulePeriodViewModel
+        {
+            Init = new DateTime(),
+            End = new DateTime(),
+            Granularity = 60
+        };
+    }
+}

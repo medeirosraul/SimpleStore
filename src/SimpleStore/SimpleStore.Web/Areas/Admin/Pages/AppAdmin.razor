@@ -1,0 +1,31 @@
+﻿@using SimpleStore.Framework.Contexts
+@inject IStoreContext StoreContext
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+<CascadingAuthenticationState>
+    <CascadingValue Value="StoreContext">
+        <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p>Nada encontrado neste endereço.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingValue>
+</CascadingAuthenticationState>
+
+@code{ 
+    protected async override Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo($"https://{StoreContext.GetHost()}/Identity/Account/Login?RedirectUri={StoreContext.GetHost()}");
+        }
+    }
+}

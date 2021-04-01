@@ -1,0 +1,132 @@
+﻿@using SimpleStore.Core.Services.Schedules
+@using SimpleStore.Web.Areas.Admin.Models.Schedules
+@inject IPeriodProvider PeriodProvider
+
+<h4>Disponibilidade</h4>
+
+<div class="row">
+    <div class="col-12">
+        <Calendar @bind-BaseDate="BaseDate" @bind-SelectedDates="TemporarySelectedDates" MarkedDates="MarkedDates" ShowSelectedDates MonthClasses="col-12 col-lg-8 col-xl-6 mb-3"/>
+    </div>
+
+    <div class="col-12 mt-3 mb-3">
+        <h5>Configuração de período</h5>
+        <p class="text-muted">A configuração seguinte será aplicada às datas selecionadas.</p>
+
+        <PeriodForm @bind-Periods="TemporaryConfiguredPeriods" OnApply="PeriodsApplied"></PeriodForm>
+    </div>
+
+    <div class="col-12 mt-3">
+        <h4>Datas configuradas</h4>
+        <div class="row">
+            <div class="col-12">
+                <h3>
+                    <button class="btn btn-light" type="button" @onclick="@(() => AddMonth(-1))"><span class="iconify" data-icon="fluent:arrow-up-20-regular" data-width="20" data-height="20"></span></button>
+                    <button class="btn btn-light" type="button" @onclick="@(() => AddMonth(1))"><span class="iconify" data-icon="fluent:arrow-down-20-regular" data-width="20" data-height="20"></span></button>
+                    @BaseDate.ToString("MMMM/yyyy")
+                </h3>
+                <hr />
+            </div>
+            @{
+                var currentMonthDays = Days?.Where(p => p.Date.Year == BaseDate.Year && p.Date.Month == BaseDate.Month).ToList();
+            }
+
+            @if (currentMonthDays == null || currentMonthDays.Count == 0)
+            {
+                <p class="text-muted">Nenhuma data configurada para @BaseDate.ToString("MMMM 'de' yyyy")</p>
+            }
+            else
+            {
+                foreach(var day in currentMonthDays)
+                {
+                    var periodCounter = 1;
+
+                    <div class="col-12 mt-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-muted">@day.Date.ToString("D")</h5>
+                                @foreach(var period in day.Periods)
+                                {
+                                    <p class="mb-0 mt-2">Período #@periodCounter</p>
+                                    @foreach(var time in PeriodProvider.CalculateAvailableTimes(period.Init, period.End, period.Granularity))
+                                    {
+                                        <span class="col-auto pill me-2 mb-2">@($"{time.ToString("HH:mm")}")</span>
+                                    }
+
+                                    periodCounter++;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                };
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICollection<ScheduleDayViewModel> Days { get; set; }
+
+    [Parameter]
+    public EventCallback<ICollection<ScheduleDayViewModel>> DaysChanged{ get; set; }
+
+    public DateTime BaseDate { get; set; } = DateTime.Now;
+    public ICollection<DateTime> MarkedDates { get; set; } = new List<DateTime>();
+    public ICollection<DateTime> TemporarySelectedDates { get; set; } = new List<DateTime>();
+    public ICollection<SchedulePeriodViewModel> TemporaryConfiguredPeriods { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        UpdateMarkedDates();
+    }
+
+    private async Task PeriodsApplied(ICollection<SchedulePeriodViewModel> periods)
+    {
+        Days ??= new List<ScheduleDayViewModel>();
+        foreach (var date in TemporarySelectedDates)
+        {
+            var dateToAdd = Days.FirstOrDefault(p => p.Date.Date == date.Date);
+            if(dateToAdd == null)
+            {
+                dateToAdd = new ScheduleDayViewModel
+                {
+                    Date = date
+                };
+
+                Days.Add(dateToAdd);
+            }
+
+            dateToAdd.Periods = TemporaryConfiguredPeriods.OrderBy(p => p.Init).ToList();
+        }
+
+        // Sort dates
+        Days = Days.OrderBy(p => p.Date).ToList();
+
+        // Clear temporary selected dates on calendar
+        TemporarySelectedDates.Clear();
+
+        // Update marked dates on calendar
+        UpdateMarkedDates();
+
+        // Trigger dates changed
+        await DaysChanged.InvokeAsync(Days);
+    }
+
+    private void UpdateMarkedDates()
+    {
+        MarkedDates = new List<DateTime>();
+
+        if (Days == null) return;
+
+        foreach (var day in Days)
+        {
+            MarkedDates.Add(day.Date);
+        }
+    }
+
+    private void AddMonth(int i)
+    {
+        BaseDate = BaseDate.AddMonths(i);
+    }
+}

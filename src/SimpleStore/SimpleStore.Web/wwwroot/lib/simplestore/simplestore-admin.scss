@@ -1,0 +1,144 @@
+﻿@import "../bootstrap-5.0.0-beta1/scss/bootstrap.scss";
+/* Theme */
+
+/* Panels */
+.panel {
+    padding: 20px 10px;
+    background-color: white;
+    border-radius: 5px;
+
+    h3 {
+        color: $gray-500;
+        margin-bottom: 0;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+
+        .iconify {
+            margin-right: 5px;
+        }
+    }
+}
+
+/* Navtabs */
+
+// md
+@media (min-width: 768px) {
+    .nav.nav-tabs.flex-md-column {
+        min-width: 250px;
+        padding-right: 15px;
+        border-bottom: 0;
+
+        .nav-link {
+            background-color: transparent;
+            border-right: 1px solid $border-color;
+            border-radius: 0;
+            transition: none;
+            color: $gray-500;
+        }
+
+        .nav-link.active {
+            border-right: 0;
+            border-top: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+            color: $gray-800;
+        }
+
+        .nav-link:hover:not(.active) {
+            border-top: transparent 1px solid;
+            border-left: transparent 1px solid;
+            border-bottom: transparent 1px solid;
+        }
+    }
+}
+
+/* Buttons */
+button:focus {
+    outline: none;
+}
+
+/* Forms */
+form {
+    margin-top: 15px !important;
+
+    label.inline {
+        max-width: 300px !important;
+    }
+
+    @media (min-width: 768px) {
+        .label-offset {
+            margin-left: 300px;
+        }
+    }
+
+    .input-container {
+        max-width: 650px;
+    }
+    /* Fixes */
+    .form-check.form-switch {
+        padding-top: 2px;
+    }
+}
+
+/* Calendar */
+.calendar .month {
+    .row {
+        border-top: $border-color 1px solid;
+    }
+    .row:last-child {
+        border-bottom: $border-color 1px solid;
+    }
+    .day {
+        border-left: $border-color 1px solid;
+    }
+    .day:last-child{
+        border-right: $border-color 1px solid;
+    }
+}
+
+/* Pills */
+.pill {
+    display: inline-block;
+    border: $gray-500 1px solid;
+    padding: 0px 5px;
+    border-radius: 100px;
+    margin: 4px;
+}
+
+/* Notifications */
+.notification-container {
+    z-index: 1000;
+}
+
+/* Utilities */
+.cursor-pointer {
+    cursor:pointer;
+}
+
+.square-box {
+    position: relative;
+    width: 100%;
+}
+
+.square-box:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+.square-content {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.text-disabled {
+    color: $gray-400;
+}

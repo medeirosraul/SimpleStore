@@ -1,0 +1,34 @@
+﻿@page "/Admin/Schedules/Edit/{id?}"
+@inject NavigationManager Navigation
+
+<Page>
+    <Panel Title="Agenda">
+        <HeaderActions>
+            <button class="btn btn-primary me-2" type="submit" form="schedule-form" @onclick:stopPropagation @onclick="@(() => _continueEdit = false)">
+                <span class="iconify" data-icon="fluent:save-20-filled" data-width="20" data-height="20"></span>
+                Salvar
+            </button>
+            <button class="btn btn-secondary" type="submit" form="schedule-form" @onclick:stopPropagation @onclick="@(() => _continueEdit = true)">
+                <span class="iconify" data-icon="fluent:save-edit-20-filled" data-width="20" data-height="20"></span>
+                Salvar e cotinuar editando
+            </button>
+        </HeaderActions>
+        <Content>
+            <ScheduleForm Id="@Id" OnSuccessSubmit="SuccessSubmited"/>
+        </Content>
+    </Panel>
+</Page>
+
+@code{
+    private bool _continueEdit = false;
+    
+    [Parameter]
+    public string Id { get; set; }
+
+    protected void SuccessSubmited()
+    {
+        if(_continueEdit) return;
+
+        Navigation.NavigateTo("/Admin/Schedules");
+    }
+}

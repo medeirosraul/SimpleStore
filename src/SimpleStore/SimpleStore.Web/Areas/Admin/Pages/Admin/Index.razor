@@ -1,0 +1,142 @@
+﻿@page "/Admin"
+@using SimpleStore.Framework.Types
+@using SimpleStore.Web.Areas.Admin.Models.Admin
+<Page>
+    <Panel Title="Dashboard">
+        
+        <HeaderActions>
+            <button type="button" class="btn btn-primary" @onclick="Notificate">
+                <span class="iconify" data-icon="fluent:add-20-filled" data-width="20" data-height="20"></span>
+                Notificar
+            </button>
+        </HeaderActions>
+        <Content>
+            <Calendar/>
+            <Form Model="TestModel">
+                <FormTimeRange @bind-From="@TestModel.Time" @bind-To="@TestModel.Time" Label="Intervalo de tempo"/>
+                <FormField @bind-Value="@TestModel.Text" Label="Texto" />
+                <FormField @bind-Value="@TestModel.Integer" Label="Inteiro" />
+                <FormField @bind-Value="@TestModel.Decimal" Label="Decimal" />
+                <FormField @bind-Value="@TestModel.Boolean" Label="Boolean" />
+                <FormField @bind-Value="@TestModel.Type" Label="Tipo">
+                    <SelectOptions>
+                        <option value="@SimpleStore.Core.Entities.CatalogItems.CatalogItemType.Product">Produto</option>
+                        <option value="@SimpleStore.Core.Entities.CatalogItems.CatalogItemType.Service">Serviço</option>
+                    </SelectOptions>
+                </FormField>
+                <p>
+                    <span><strong>Intervalo: </strong> @TestModel.Time</span><br />
+                    <span><strong>Texto: </strong> @TestModel.Text</span><br />
+                    <span><strong>Inteiro: </strong> @TestModel.Integer</span><br />
+                    <span><strong>Decimal: </strong> @TestModel.Decimal</span><br />
+                    <span><strong>Boolean: </strong> @TestModel.Boolean</span><br />
+                    <span><strong>Type: </strong> @TestModel.Type</span><br />
+                </p>
+            </Form>
+        </Content>
+    </Panel>
+
+    <Panel Title="Tabs">
+        <Content>
+            <TabContainer>
+                <Navigation>
+                    <TabLink Target="Tab1">Aba 1</TabLink>
+                    <TabLink Target="Tab2" Active>Aba 2</TabLink>
+                    <TabLink Target="Tab3">Aba 3</TabLink>
+                </Navigation>
+                <Content>
+                    <TabContent Id="Tab1">
+                        Conteúdo da aba 1
+                    </TabContent>
+                    <TabContent Id="Tab2" Active>
+                        Conteúdo da aba 2
+                    </TabContent>
+                    <TabContent Id="Tab3">
+                        Conteúdo da aba 3
+                    </TabContent>
+                </Content>
+            </TabContainer>
+        </Content>
+    </Panel>
+
+    <Panel Title="Table">
+        <Content>
+            <Table Context="list">
+                <Head>
+                    <tr>
+                        <th>Texto</th>
+                        <th>Inteiro</th>
+                        <th>Decimal</th>
+                        <th>Boolean</th>
+                    </tr>
+
+                </Head>
+                <RowTemplate>
+                    <td>@context.Text</td>
+                    <td>@context.Integer</td>
+                    <td>@context.Decimal</td>
+                    <td>@context.Boolean</td>
+                </RowTemplate>
+            </Table>
+        </Content>
+    </Panel>
+</Page>
+
+@code {
+    TestModel TestModel = new TestModel
+    {
+        Text = "Texto simples",
+        Integer = 1001,
+        Decimal = 1001.01m,
+        Boolean = false,
+        Type = Core.Entities.CatalogItems.CatalogItemType.Service
+    };
+
+    public PagedList<TestModel> list = new PagedList<TestModel>
+{
+    new TestModel
+    {
+    Text = "Texto simples 1",
+    Integer = 1001,
+    Decimal = 1001.01m,
+    Boolean = false
+    },
+    new TestModel
+    {
+    Text = "Texto simples 2",
+    Integer = 1001,
+    Decimal = 1001.01m,
+    Boolean = false
+    },
+    new TestModel
+    {
+    Text = "Texto simples 3",
+    Integer = 1001,
+    Decimal = 1001.01m,
+    Boolean = false
+    }
+    };
+
+    public List<DateTime> MarkedDates = new List<DateTime>(){
+    new DateTime(2021, 03, 24),
+    new DateTime(2021, 03, 1)
+    };
+
+    [CascadingParameter]
+    public NotificationsHub NotificationsHub { get; set; }
+
+    protected override void OnInitialized()
+    {
+        list.PageSize = 2;
+        list.TotalCount = 3;
+        list.PageIndex = 1;
+    }
+
+    public async Task Notificate()
+    {
+        NotificationsHub.Send(new Notification
+        {
+            Message = "Notificação..."
+        });
+    }
+}

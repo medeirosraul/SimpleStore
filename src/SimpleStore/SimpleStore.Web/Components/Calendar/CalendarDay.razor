@@ -1,0 +1,47 @@
+﻿<div class="day col @(_sameMonth ? "" : "text-disabled")" @onclick="@(async () => await OnClick.InvokeAsync(Date))">
+    <div class="square-box">
+        <div class="square-content p-1 p-sm-2">
+            <h5>
+                @Date.Day
+                @if (Checked) {
+                    <span class="text-primary ms-sm-2">
+                        <span class="iconify" data-icon="fluent:checkmark-circle-20-filled" data-width="20" data-height="20">
+                        </span>
+                    </span>
+                }
+                else if (Marked)
+                {
+                    <span class="text-muted ms-sm-2">
+                        <span class="iconify" data-icon="fluent:checkmark-circle-20-filled" data-width="20" data-height="20">
+                        </span>
+                    </span>
+                }
+            </h5>
+           
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _sameMonth;
+
+    [CascadingParameter]
+    public DateTime BaseDate{ get; set; }
+
+    [Parameter]
+    public DateTime Date{ get; set; }
+
+    [Parameter]
+    public bool Checked { get; set; }
+
+    [Parameter]
+    public bool Marked { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime> OnClick { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _sameMonth = Date.Month == BaseDate.Month;
+    }
+}

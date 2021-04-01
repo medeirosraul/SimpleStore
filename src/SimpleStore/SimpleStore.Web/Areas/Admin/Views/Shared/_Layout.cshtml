@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Loja Simplificada</title>
+    <link rel="stylesheet" href="~/lib/simplestore/simplestore-admin.css" />
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+</head>
+<body class="bg-dark">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark pt-5">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/Admin">Loja Simplificada</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin">Início</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="catalog-dropdown" role="button" data-bs-toggle="dropdown">Catálogo</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="Admin" asp-page="/Categories/Index">Categorias</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-page="/Products/Index">Produtos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container-fluid">
+            @RenderBody()
+        </div>
+    </main>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - SimpleStore - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="_framework/blazor.server.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap-5.0.0-beta1/dist/js/bootstrap.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

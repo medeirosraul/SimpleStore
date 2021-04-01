@@ -1,0 +1,118 @@
+﻿@using SimpleStore.Core.Services.Products
+@using SimpleStore.Web.Areas.Admin.Models.CatalogItems
+@using SimpleStore.Core.Entities.CatalogItems;
+@inject IProductService ProductService
+<Form id="product-form" Model="@Model" OnValidSubmit="@Save">
+    <TabContainer>
+        <Navigation>
+            <TabLink Target="item-info" Active>Informações do item</TabLink>
+            <TabLink Target="price">Preços</TabLink>
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                <TabLink Target="pictures">Imagens</TabLink>
+            }
+        </Navigation>
+        <Content>
+            <TabContent Id="item-info" Active>
+                @if (!string.IsNullOrWhiteSpace(Id))
+                        {
+                <FormField @bind-Value="@Model.Id" Label="ID" InputType="ValueOnly" />
+                }
+                <FormField @bind-Value="@Model.Published" Label="Publicado" />
+                <FormField @bind-Value="@Model.Type" Label="Tipo">
+                    <SelectOptions>
+                        <option value="@CatalogItemType.Product">Produto</option>
+                        <option value="@CatalogItemType.Service">Serviço</option>
+                    </SelectOptions>
+                </FormField>
+                <FormField @bind-Value="@Model.Name" Label="Nome" />
+                <FormField @bind-Value="@Model.ShortDescription" Label="Descrição resumida" />
+                <FormField @bind-Value="@Model.FullDescription" Label="Descrição completa" />
+                <FormField @bind-Value="@Model.Sku" Label="SKU" />
+                <FormField @bind-Value="@Model.Gtin" Label="GTIN" />
+            </TabContent>
+            <TabContent Id="price">
+                <FormField @bind-Value="@Model.ActivePrice.Active" Label="Ativo" />
+                <FormField @bind-Value="@Model.ActivePrice.Value" Label="Valor" />
+                <FormField @bind-Value="@Model.ActivePrice.OldValue" Label="Valor antigo" />
+                <FormField @bind-Value="@Model.ActivePrice.Cost" Label="Custo" />
+                <Table Context="@Model.Prices" TModel="CatalogItemPriceViewModel">
+                    <Head>
+                        <tr>
+                            <th>Valor</th>
+                            <th>Valor antigo</th>
+                            <th>Custo</th>
+                            <th>Ativo</th>
+                        </tr>
+                    </Head>
+                    <RowTemplate>
+                        @{
+                            var rowClass = "";
+                            if (context.Id == Model.ActivePrice.Id)
+                            {
+                                rowClass = "bg-dark text-light";
+                            }
+                        }
+                        <tr class="@rowClass cursor-pointer" @onclick="@(() => SetActivePrice(context.Id))">
+                            <td>@context.Value</td>
+                            <td>@context.OldValue</td>
+                            <td>@context.Cost</td>
+                            <td>@context.Active</td>
+                        </tr>
+                    </RowTemplate>
+                </Table>
+            </TabContent>
+
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                <TabContent Id="pictures">
+                    <CatalogItemPicturesForm CatalogItem="@Model"></CatalogItemPicturesForm>
+                </TabContent>
+            }
+
+        </Content>
+    </TabContainer>
+</Form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public CatalogItemViewModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessSubmit { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Model == null)
+            Model = new CatalogItemViewModel();
+
+        if (string.IsNullOrEmpty(Id))
+            return;
+
+        await Load(Id);
+    }
+
+    public async Task Save()
+    {
+        // Save or Update
+        var entity = Model.ToCatalogItem();
+        if (await ProductService.InsertOrUpdate(entity) > 0)
+            Model.FromCatalogItem(entity);
+
+        await OnSuccessSubmit.InvokeAsync();
+    }
+
+    public async Task Load(string id)
+    {
+        var entity = await ProductService.GetById(id);
+        Model.FromCatalogItem(entity);
+    }
+
+    public void SetActivePrice(string id)
+    {
+        Model.SetActivePrice(id);
+    }
+}

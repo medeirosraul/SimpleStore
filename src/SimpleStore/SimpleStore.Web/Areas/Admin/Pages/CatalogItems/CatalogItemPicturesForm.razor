@@ -1,0 +1,85 @@
+﻿@using SimpleStore.Core.Entities.Pictures
+@using System.IO
+@using SimpleStore.Core.Entities.CatalogItems
+@using SimpleStore.Core.Services.Pictures
+@using SimpleStore.Core.Services.Products
+@using SimpleStore.Web.Areas.Admin.Models.CatalogItems
+@inject IProductPictureService ProductPictureService
+
+@if (CatalogItem?.Pictures != null)
+{
+    foreach(var p in CatalogItem.Pictures)
+    {
+        if(p.Picture != null)
+        {
+            <div class="row">
+            <div class="col-auto me-2" style="width: 200px;">
+                <div class="square-box">
+                    <div class="square-content">
+                        <img src="/Picture/Product/200/@p.Picture.FileName" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <p>@p.Picture.Path/@p.Picture.FileName</p>
+                <FormField @bind-Value="@p.Picture.Title" Label="Título"></FormField>
+                <button type="button" class="btn btn-danger" @onclick="@(() => RemovePicture(p))">Excluir</button>
+            </div>
+        </div>
+}
+        else
+        {
+            <p>Imagem inválida!</p>
+        }
+    }
+}
+
+<div class="image-drop-area">
+    Drag and drop your files here or click to open file loading dialogue...
+    <InputFile id="inputDrop"
+               OnChange="OnInputFileChange"
+               multiple />
+</div>
+
+@code {
+    [Parameter]
+    public CatalogItemViewModel CatalogItem { get; set; }
+
+    protected async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        foreach (var image in e.GetMultipleFiles())
+        {
+            var picture = new Picture
+            {
+                FileName = image.Name,
+                ContentType = image.ContentType,
+                Size = image.Size
+            };
+
+            using var ms = new MemoryStream();
+            await image.OpenReadStream(9999999).CopyToAsync(ms);
+            picture.StorageObject = new Core.Entities.Storages.StorageObject();
+            picture.StorageObject.Bytes = ms.ToArray();
+
+            var productPicture = new CatalogItemPicture
+            {
+                CatalogItemId = CatalogItem.Id,
+                Picture = picture
+            };
+
+            if (await ProductPictureService.InsertOrUpdate(productPicture) > 0)
+            {
+                productPicture.Picture.StorageObject = null;
+
+                CatalogItem.Pictures ??= new List<CatalogItemPictureViewModel>();
+                CatalogItem.Pictures.Add(new CatalogItemPictureViewModel().FromCatalogItemPicture(productPicture));
+            }
+        }
+    }
+
+    protected async Task RemovePicture(CatalogItemPictureViewModel picture)
+    {
+        await ProductPictureService.Delete(picture.Id, false);
+        CatalogItem.Pictures.Remove(picture);
+    }
+}

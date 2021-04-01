@@ -1,0 +1,71 @@
+﻿@using SimpleStore.Core.Services.Schedules
+@using SimpleStore.Web.Areas.Admin.Models.CatalogItems
+@using SimpleStore.Web.Areas.Admin.Models.Schedules
+@inject IScheduleService ScheduleService
+<Form id="schedule-form" Model="@Model" OnValidSubmit="@Save">
+    <TabContainer>
+        <Navigation>
+            <TabLink Target="schedule-info" Active>Informações da Agenda</TabLink>
+            <TabLink Target="availability">Disponibilidade</TabLink>
+        </Navigation>
+        <Content>
+            <TabContent Id="schedule-info" Active>
+                @if (!string.IsNullOrWhiteSpace(Id))
+                {
+                    <FormField @bind-Value="@Model.Id" Label="ID" InputType="ValueOnly" />
+                }
+                <FormField @bind-Value="@Model.Name" Label="Nome" />
+            </TabContent>
+            <TabContent Id="availability">
+                <AvailabilityForm @bind-Days="Model.Days"/>
+            </TabContent>
+        </Content>
+    </TabContainer>
+</Form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public ScheduleViewModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessSubmit { get; set; }
+
+    [CascadingParameter]
+    public NotificationsHub NotificationsHub { get;  set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Model == null)
+            Model = new ScheduleViewModel();
+
+        if (string.IsNullOrEmpty(Id))
+            return;
+
+        await Load(Id);
+    }
+
+    public async Task Save()
+    {
+        // Save or Update
+        var entity = Model.ToSchedule();
+        if (await ScheduleService.InsertOrUpdate(entity) > 0)
+            Model.FromSchedule(entity);
+
+        NotificationsHub.Send(new Notification
+        {
+            Message = "As alterações foram salvas.",
+            Type = NotificationType.Success
+        });
+
+        await OnSuccessSubmit.InvokeAsync();
+    }
+
+    public async Task Load(string id)
+    {
+        var entity = await ScheduleService.GetById(id);
+        Model.FromSchedule(entity);
+    }
+}

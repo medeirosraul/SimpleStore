@@ -1,0 +1,14 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+/src/SimpleStore/SimpleStore.Core/bin/Debug
+/src/SimpleStore/SimpleStore.Core/obj
+/src/SimpleStore/SimpleStore.Blazor/obj
+/src/SimpleStore/SimpleStore.Framework/bin/Debug
+/src/SimpleStore/SimpleStore.Framework/obj
+/src/SimpleStore/SimpleStore.Web/App_Data/Stores/simples/Pictures/Products
+/src/SimpleStore/SimpleStore.Web/bin/Debug
+/src/SimpleStore/SimpleStore.Web/obj
+/src/SimpleStore/SimpleStore.Core.Entities/bin/Debug
+/src/SimpleStore/SimpleStore.Core.Entities/obj

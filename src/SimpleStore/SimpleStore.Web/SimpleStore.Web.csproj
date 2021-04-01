@@ -1,0 +1,117 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>aspnet-SimpleStore.Web-21124BE8-BE19-46E7-A755-933735872D4B</UserSecretsId>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Admin\Views\**" />
+    <Content Remove="Areas\Admin\Views\**" />
+    <EmbeddedResource Remove="Areas\Admin\Views\**" />
+    <None Remove="Areas\Admin\Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\lib\simplestore\themes\base\simplestore.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0-preview.2.21154.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.2.21154.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0-preview.2.21154.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0-preview.2.21154.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.2.21154.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.2.21154.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="Serilog" Version="2.10.1-dev-01285" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0-dev-00839" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\CODEOWNERS" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\CONTRIBUTING.md" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\dependabot.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\FUNDING.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\ISSUE_TEMPLATE\bug_report.md" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\ISSUE_TEMPLATE\config.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\ISSUE_TEMPLATE\feature_request.md" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\release-drafter.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\SUPPORT.md" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\browserstack.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\bundlewatch.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\codeql.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\css.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\docs.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\js.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\lint.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\node-sass.yml" />
+    <None Include="wwwroot\lib\bootstrap-5.0.0-beta1\.github\workflows\release-notes.yml" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\Fabric.Scoped.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\Fabric.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Animation.Mixins.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Animation.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_BrandIcon.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Color.Background.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Color.Border.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Color.Font.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Color.Mixins.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Color.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Depth.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Directionality.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Font.Mixins.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Font.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_General.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Grid.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Icon.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_Responsive.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\mixins\_ScopedStyles.Mixins.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Animation.Variables.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Animation.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_BrandIcon.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Color.Variables.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Color.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Depth.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Font.Variables.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Font.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_General.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Icon.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_Responsive.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\variables\_ZIndex.Variables.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Animation.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Animation.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_BrandIcon.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Color.Background.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Color.Border.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Color.Font.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Color.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Color.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Depth.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Font.Definitions.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Font.MDL2.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Font.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Grid.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Icon.Definitions.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Icon.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_References.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Responsive.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Utility.scss" />
+    <None Include="wwwroot\lib\fabric-ui\dist\sass\_Wrapper.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleStore.Core.Entities\SimpleStore.Core.Entities.csproj" />
+    <ProjectReference Include="..\SimpleStore.Core\SimpleStore.Core.csproj" />
+    <ProjectReference Include="..\SimpleStore.Framework\SimpleStore.Framework.csproj" />
+  </ItemGroup>
+
+</Project>

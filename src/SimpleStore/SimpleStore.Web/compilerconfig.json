@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "wwwroot/lib/simplestore/simplestore-admin.css",
+    "inputFile": "wwwroot/lib/simplestore/simplestore-admin.scss"
+  },
+  {
+    "outputFile": "wwwroot/lib/simplestore/themes/base/simplestore.css",
+    "inputFile": "wwwroot/lib/simplestore/themes/base/simplestore.scss"
+  }
+]

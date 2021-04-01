@@ -1,0 +1,59 @@
+﻿@inherits LayoutComponentBase
+<Notifications @bind-NotificationsHub="NotificationsHub"></Notifications>
+<AuthorizeView>
+    <Authorized>
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-dark pt-5">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/Admin">Loja Simplificada</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Admin">Início</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="catalog-dropdown" role="button" data-bs-toggle="dropdown">Catálogo</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/Admin/CatalogItems">Itens do Catálogo</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="scheduling-dropdown" role="button" data-bs-toggle="dropdown">Agendamento</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/Admin/Schedules">Agendas</a></li>
+                                    <li><a class="dropdown-item" href="/Admin/Scheduling">Agendamentos</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <div class="container-fluid">
+                <CascadingValue Value="@NotificationsHub">
+                    @Body
+                </CascadingValue>
+            </div>
+        </main>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2021 - SimpleStore - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            </div>
+        </footer>
+    </Authorized>
+    <NotAuthorized>
+        <p class="text-white">Você não está autorizado a visualizar esta página...</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+    public NotificationsHub NotificationsHub { get; set; }
+}

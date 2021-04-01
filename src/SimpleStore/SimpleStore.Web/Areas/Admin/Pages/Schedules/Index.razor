@@ -1,0 +1,56 @@
+﻿@page "/Admin/Schedules"
+@using SimpleStore.Core.Services.Schedules
+@using SimpleStore.Web.Areas.Admin.Models.Schedules
+@inject IScheduleService ScheduleService
+<Page>
+    <Panel Title="Agendas">
+        <HeaderActions>
+            <a class="btn btn-primary" href="Admin/Schedules/Edit">
+                <span class="iconify" data-icon="fluent:add-20-filled" data-width="20" data-height="20"></span>
+                Adicionar nova Agenda
+            </a>
+        </HeaderActions>
+        <Content>
+            <PagedTable Context="Schedules" OnPageChange="Fill">
+                <Head>
+                    <tr>
+                        <th>Nome</th>
+                    </tr>
+                </Head>
+                <RowTemplate>
+                    <tr>
+                        <td><a href="/Admin/Schedules/Edit/@context.Id">@context.Name</a></td>
+                    </tr>
+                </RowTemplate>
+            </PagedTable>
+        </Content>
+    </Panel>
+</Page>
+
+@code {
+    public PagedList<ScheduleViewModel> Schedules { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Fill(1);
+    }
+
+    private async Task Fill(int page)
+    {
+        var schedules = await ScheduleService.Get(page, 5, null);
+        if(schedules != null && schedules.Count > 0)
+        {
+            Schedules ??= new PagedList<ScheduleViewModel>();
+
+            Schedules.Clear();
+            Schedules.TotalCount = schedules.TotalCount;
+            Schedules.PageSize = schedules.PageSize;
+            Schedules.PageIndex = schedules.PageIndex;
+
+            foreach(var s in schedules)
+            {
+                Schedules.Add(new ScheduleViewModel().FromSchedule(s));
+            }
+        }
+    }
+}
