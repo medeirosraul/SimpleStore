@@ -1,4 +1,5 @@
-﻿@using SimpleStore.Core.Services.Schedules
+﻿@using SimpleStore.Core.Entities.Schedules
+@using SimpleStore.Core.Services.Schedules
 @using SimpleStore.Web.Areas.Admin.Models.Schedules
 @inject IPeriodProvider PeriodProvider
 
@@ -47,14 +48,9 @@
 </div>
 
 @code {
-    [Parameter]
-    public ICollection<SchedulePeriodViewModel> Periods { get; set; }
-
-    [Parameter]
-    public EventCallback<ICollection<SchedulePeriodViewModel>> PeriodsChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<ICollection<SchedulePeriodViewModel>> OnApply { get; set; }
+    [Parameter] public ICollection<SchedulePeriod> Periods { get; set; }
+    [Parameter] public EventCallback<ICollection<SchedulePeriod>> PeriodsChanged { get; set; }
+    [Parameter] public EventCallback<ICollection<SchedulePeriod>> OnApply { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -66,13 +62,13 @@
 
     private async Task AddPeriod()
     {
-        Periods ??= new List<SchedulePeriodViewModel>();
+        Periods ??= new List<SchedulePeriod>();
         Periods.Add(CreatePeriod());
 
         await PeriodsChanged.InvokeAsync(Periods);
     }
 
-    private async Task RemovePeriod(SchedulePeriodViewModel period)
+    private async Task RemovePeriod(SchedulePeriod period)
     {
         Periods.Remove(period);
         await PeriodsChanged.InvokeAsync(Periods);
@@ -83,9 +79,9 @@
         await OnApply.InvokeAsync(Periods);
     }
 
-    private SchedulePeriodViewModel CreatePeriod()
+    private SchedulePeriod CreatePeriod()
     {
-        return new SchedulePeriodViewModel
+        return new SchedulePeriod
         {
             Init = new DateTime(),
             End = new DateTime(),

@@ -1,8 +1,9 @@
 ﻿@page "/Admin/CatalogItems"
+@using SimpleStore.Core.Entities.CatalogItems
 @using SimpleStore.Core.Services.Products
 @using SimpleStore.Framework.Types
 @using SimpleStore.Web.Areas.Admin.Models.CatalogItems
-@inject IProductService ProductService
+@inject ICatalogItemService ProductService
 
 <Page>
     <Panel Title="Produtos">
@@ -33,28 +34,15 @@
 
 @code
 {
-    public PagedList<CatalogItemViewModel> Items { get; set; }
+    public PagedList<CatalogItem> Items { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Items = new PagedList<CatalogItemViewModel>();
         await Fill(1);
     }
 
     private async Task Fill(int page)
     {
-        var products = await ProductService.Get(page, 5, null);
-        if(products != null && products.Count > 0)
-        {
-            Items.Clear();
-            Items.TotalCount = products.TotalCount;
-            Items.PageSize = products.PageSize;
-            Items.PageIndex = products.PageIndex;
-
-            foreach(var p in products)
-            {
-                Items.Add(new CatalogItemViewModel().FromCatalogItem(p));
-            }
-        }
+        Items = await ProductService.Get(page, 5, null);
     }
 }

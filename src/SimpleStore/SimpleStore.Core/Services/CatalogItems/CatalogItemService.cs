@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services.Products
 {
-    public interface IProductService: IStoreBaseService<CatalogItem>
+    public interface ICatalogItemService : IStoreBaseService<CatalogItem>
     {
 
     }
 
-    public class ProductService : StoreBaseService<CatalogItem>, IProductService
+    public class CatalogItemService : StoreBaseService<CatalogItem>, ICatalogItemService
     {
         private readonly IPriceService _priceService;
 
-        public ProductService(
+        public CatalogItemService(
             StoreDbContext context, 
             IStoreContext storeContext, 
             IPriceService priceService) : base(context, storeContext)
@@ -24,9 +24,9 @@ namespace SimpleStore.Core.Services.Products
             _priceService = priceService;
         }
 
-        public override async Task<CatalogItem> GetById(string id)
+        public override async Task<CatalogItem> GetById(string id, bool tracking = false)
         {
-            var query = PrepareQuery()
+            var query = PrepareQuery(tracking)
                 .Where(p => p.Id == id)
                 .Include(p => p.Prices)
                 .Include(p => p.Pictures)
@@ -35,16 +35,6 @@ namespace SimpleStore.Core.Services.Products
 
             var result = await Get(query);
             return result.FirstOrDefault();
-        }
-
-        public override async Task<int> InsertOrUpdate(CatalogItem product)
-        {
-            TrackEntity(product);
-
-            if (product.Prices != null && product.Prices.Count > 0)
-                _priceService.TrackEntity(product.Prices);
-
-            return await SaveChanges();
         }
     }
 }

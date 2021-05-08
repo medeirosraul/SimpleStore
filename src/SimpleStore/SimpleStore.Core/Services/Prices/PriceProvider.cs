@@ -24,12 +24,20 @@ namespace SimpleStore.Core.Services.Prices
 
         public string GetPriceOldValueString(Price price)
         {
-            return price.Value.ToString("F2");
+            if (price == null)
+                return "";
+
+            return price.OldValue.ToString("F2");
         }
 
         public string GetPriceValueString(Price price)
         {
-            return price.OldValue.ToString("F2");
+            if (price == null)
+            {
+                return "valor indisponível";
+            }
+
+            return $"R${price.Value.ToString("F2")}";
         }
 
         public async Task<Price> GetProductPrice(CatalogItem product)

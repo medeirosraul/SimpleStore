@@ -15,9 +15,9 @@ namespace SimpleStore.Core.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "6.0.0-preview.2.21154.2")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -51,7 +51,7 @@ namespace SimpleStore.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -146,7 +146,7 @@ namespace SimpleStore.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -442,128 +442,6 @@ namespace SimpleStore.Core.Migrations
                     b.ToTable("Prices");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Activity", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Effort")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.Property<DateTime>("Init")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PeriodId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("StoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PeriodId");
-
-                    b.ToTable("ScheduleActivities");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Day", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ScheduleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("StoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScheduleId");
-
-                    b.ToTable("ScheduleDays");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Period", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DayId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Granularity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(60);
-
-                    b.Property<DateTime>("Init")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DayId");
-
-                    b.ToTable("SchedulePeriod");
-                });
-
             modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Schedule", b =>
                 {
                     b.Property<string>("Id")
@@ -592,6 +470,125 @@ namespace SimpleStore.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.ScheduleActivity", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Duration")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<DateTime>("Init")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PeriodId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeriodId");
+
+                    b.ToTable("ScheduleActivities");
+                });
+
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.ScheduleDate", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ScheduleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.ToTable("ScheduleDates");
+                });
+
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.SchedulePeriod", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DateId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Granularity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(60);
+
+                    b.Property<DateTime>("Init")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DateId");
+
+                    b.ToTable("SchedulePeriods");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Storages.StorageObject", b =>
@@ -769,25 +766,25 @@ namespace SimpleStore.Core.Migrations
                     b.Navigation("CatalogItem");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Activity", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.ScheduleActivity", b =>
                 {
-                    b.HasOne("SimpleStore.Core.Entities.Schedules.Period", null)
+                    b.HasOne("SimpleStore.Core.Entities.Schedules.SchedulePeriod", null)
                         .WithMany("Activities")
                         .HasForeignKey("PeriodId");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Day", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.ScheduleDate", b =>
                 {
                     b.HasOne("SimpleStore.Core.Entities.Schedules.Schedule", null)
-                        .WithMany("Days")
+                        .WithMany("Dates")
                         .HasForeignKey("ScheduleId");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Period", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.SchedulePeriod", b =>
                 {
-                    b.HasOne("SimpleStore.Core.Entities.Schedules.Day", null)
+                    b.HasOne("SimpleStore.Core.Entities.Schedules.ScheduleDate", null)
                         .WithMany("Periods")
-                        .HasForeignKey("DayId");
+                        .HasForeignKey("DateId");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItem", b =>
@@ -797,19 +794,19 @@ namespace SimpleStore.Core.Migrations
                     b.Navigation("Prices");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Day", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Schedule", b =>
+                {
+                    b.Navigation("Dates");
+                });
+
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.ScheduleDate", b =>
                 {
                     b.Navigation("Periods");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Period", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.SchedulePeriod", b =>
                 {
                     b.Navigation("Activities");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Schedule", b =>
-                {
-                    b.Navigation("Days");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Stores.Store", b =>

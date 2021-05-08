@@ -11,15 +11,16 @@ namespace SimpleStore.Core.Entities.Schedules
             builder.ToTable("Schedules");
             builder.Property(x => x.Name)
                 .IsRequired();
-            builder.HasMany(x => x.Days)
+            builder.HasMany(x => x.Dates)
                 .WithOne()
                 .HasForeignKey(x => x.ScheduleId);
         }
     }
 
-    public class Schedule: StoreEntity
+    public class Schedule : StoreEntity
     {
         public string Name { get; set; }
-        public ICollection<Day> Days { get; set; }
+
+        public virtual ICollection<ScheduleDate> Dates { get; set; }
     }
 }

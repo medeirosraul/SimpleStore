@@ -34,9 +34,9 @@ namespace SimpleStore.Core
             services.AddScoped<SubscriptionService>();
             services.AddScoped<StoreService>();
 
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IProductProvider, ProductProvider>();
-            services.AddScoped<IProductPictureService, ProductPictureService>();
+            services.AddScoped<ICatalogItemService, CatalogItemService>();
+            services.AddScoped<ICatalogItemProvider, CatalogItemProvider>();
+            services.AddScoped<ICatalogItemPictureService, CatalogItemPictureService>();
 
             services.AddScoped<IPriceService, PriceService>();
             services.AddScoped<IPriceProvider, PriceProvider>();
@@ -46,6 +46,9 @@ namespace SimpleStore.Core
             services.AddScoped<IStorageObjectService, StorageObjectService>();
 
             services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<ISchedulePeriodService, SchedulePeriodService>();
+            services.AddScoped<IScheduleDateService, ScheduleDateService>();
+            services.AddScoped<IScheduleActivityService, ScheduleActivityService>();
             services.AddScoped<IPeriodProvider, PeriodProvider>();
 
             // Return

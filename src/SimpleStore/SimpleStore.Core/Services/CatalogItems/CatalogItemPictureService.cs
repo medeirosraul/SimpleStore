@@ -7,33 +7,35 @@ using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services.Products
 {
-    public interface IProductPictureService: IStoreBaseService<CatalogItemPicture>
+    public interface ICatalogItemPictureService : IStoreBaseService<CatalogItemPicture>
     {
 
     }
-    public class ProductPictureService : StoreBaseService<CatalogItemPicture>, IProductPictureService
+    public class CatalogItemPictureService : StoreBaseService<CatalogItemPicture>, ICatalogItemPictureService
     {
         private readonly IPictureService _pictureService;
         private readonly IStorageObjectService _storageObjectService;
 
-        public ProductPictureService(StoreDbContext context, IStoreContext storeContext, IPictureService pictureService, IStorageObjectService storageObjectService) : base(context, storeContext)
+        public CatalogItemPictureService(StoreDbContext context, IStoreContext storeContext, IPictureService pictureService, IStorageObjectService storageObjectService) : base(context, storeContext)
         {
             _pictureService = pictureService;
             _storageObjectService = storageObjectService;
         }
 
-        public override async Task<int> InsertOrUpdate(CatalogItemPicture picture)
+        public override async Task<int> Insert(CatalogItemPicture picture)
         {
-            TrackEntity(picture);
-            _pictureService.TrackEntity(picture.Picture);
-            _storageObjectService.TrackEntity(picture.Picture.StorageObject);
+            var count = await base.Insert(picture);
 
-            // Change Picture Name
+            if (count == 0)
+                return 0;
+
+            // Rename filename with ID
             var extension = picture.Picture.FileName.Split('.').Last();
             picture.Picture.FileName = picture.Picture.FileName.Replace($".{extension}", string.Empty);
             picture.Picture.FileName += $"__{picture.Picture.Id}.jpg";
 
-            return await SaveChanges();
+
+            return await Update(picture);
         }
     }
 }

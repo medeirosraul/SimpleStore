@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace SimpleStore.Web.Areas.Store.ViewComponents
 {
-    public class CatalogNewProductsViewComponent:ViewComponent
+    public class CatalogNewItemsViewComponent:ViewComponent
     {
         private readonly IStoreContext _storeContext;
-        private readonly IProductProvider _productProvider;
+        private readonly ICatalogItemProvider _productProvider;
         private readonly IPriceProvider _priceProvider;
         private readonly IPictureProvider _pictureProvider;
 
-        public CatalogNewProductsViewComponent(IStoreContext storeContext, IProductProvider productProvider, IPriceProvider priceProvider, IPictureProvider pictureProvider)
+        public CatalogNewItemsViewComponent(IStoreContext storeContext, ICatalogItemProvider productProvider, IPriceProvider priceProvider, IPictureProvider pictureProvider)
         {
             _storeContext = storeContext;
             _productProvider = productProvider;
@@ -27,14 +27,14 @@ namespace SimpleStore.Web.Areas.Store.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var products = await _productProvider.GetNewProducts(8);
+            var products = await _productProvider.GetNewCatalogItems(8);
 
             if (products == null || products.Count() == 0) return View(null);
 
-            var result = new List<CatalogProductViewModel>();
+            var result = new List<CatalogItemViewModel>();
             foreach (var p in products)
             {
-                var product = new CatalogProductViewModel
+                var product = new CatalogItemViewModel
                 {
                     Id = p.Id,
                     Name = p.Name
@@ -42,19 +42,16 @@ namespace SimpleStore.Web.Areas.Store.ViewComponents
 
                 // Product Price
                 var price = await _priceProvider.GetProductPrice(p);
-                if(price != null)
+                product.Price = new CatalogItemPriceViewModel
                 {
-                    product.Price = new CatalogProductPriceViewModel
-                    {
-                        ValueString = _priceProvider.GetPriceValueString(price),
-                        OldValueString = _priceProvider.GetPriceOldValueString(price)
-                    };
-                }
+                    ValueString = _priceProvider.GetPriceValueString(price),
+                    OldValueString = _priceProvider.GetPriceOldValueString(price)
+                };
 
                 // Product Pictures
                 if (p.Pictures != null && p.Pictures.Count > 0)
                 {
-                    product.Picture = _pictureProvider.GetProductPictureUrl(p.Pictures.FirstOrDefault()?.Picture, 200);
+                    product.Picture = _pictureProvider.GetProductPictureUrl(p.Pictures.FirstOrDefault()?.Picture, 400);
                 }
 
                 result.Add(product);

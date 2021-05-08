@@ -7,10 +7,21 @@
 
             <CalendarMonth BaseDate="BaseDate"
                        BaseDateChanged="BaseDateChanged"
+                       MarkedDates="MarkedDates" 
                        SelectedDates="SelectedDates"
                        SelectedDatesChanged="SelectedDatesChanged"
-                       MarkedDates="MarkedDates" />
+                       OnVisualizationChange="VisualizationChanged"
+                       />
         }
+        else if (Visualization == CalendarVisualization.Week)
+        {
+            <CalendarWeek 
+                BaseDate="BaseDate"
+                BaseDateChanged="BaseDateChanged"
+                Visualization="Visualization"
+                VisualizationChanged="VisualizationChanged"/>
+        }
+
         @if (ShowSelectedDates)
         {
             <div class="col">
@@ -51,6 +62,15 @@
     public bool ShowSelectedDates { get; set; } = false;
 
     [Parameter]
+    public bool EnableAllDates { get; set; } = true;
+
+    [Parameter]
+    public bool EnableCheckedDates { get; set; } = false;
+
+    [Parameter]
+    public bool EnableMarkedDates { get; set; } = false;
+
+    [Parameter]
     public string MonthClasses { get; set; }
 
     [Parameter]
@@ -63,4 +83,9 @@
     public ICollection<DateTime> MarkedDates { get; set; } = new List<DateTime>();
 
     public CalendarVisualization Visualization { get; set; } = CalendarVisualization.Month;
+
+    private async Task VisualizationChanged(CalendarVisualization visualization)
+    {
+        Visualization = visualization;
+    }
 }

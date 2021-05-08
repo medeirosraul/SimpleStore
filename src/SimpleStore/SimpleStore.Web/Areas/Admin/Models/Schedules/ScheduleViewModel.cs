@@ -8,7 +8,8 @@ namespace SimpleStore.Web.Areas.Admin.Models.Schedules
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<ScheduleDayViewModel> Days { get; set; }
+
+        public ICollection<ScheduleDateViewModel> Dates { get; set; }
 
         public ScheduleViewModel()
         {
@@ -24,7 +25,7 @@ namespace SimpleStore.Web.Areas.Admin.Models.Schedules
         {
             Id = schedule.Id;
             Name = schedule.Name;
-            Days = schedule.Days?.Select(s => new ScheduleDayViewModel(s)).ToList();
+            Dates = schedule.Dates?.Select(s => new ScheduleDateViewModel(s)).ToList();
 
             return this;
         }
@@ -35,7 +36,7 @@ namespace SimpleStore.Web.Areas.Admin.Models.Schedules
             {
                 Id = Id,
                 Name = Name,
-                Days = Days?.Select(s => s.ToDay()).ToList()
+                Dates = Dates?.Select(s => s.ToDate()).ToList()
             };
         }
     }

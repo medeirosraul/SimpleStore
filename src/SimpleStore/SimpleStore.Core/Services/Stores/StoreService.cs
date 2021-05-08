@@ -60,10 +60,9 @@ namespace SimpleStore.Core.Services.Stores
                 .FirstOrDefaultAsync();
         }
 
-        public override async Task<PagedList<Store>> Get()
+        public override async Task<PagedList<Store>> Get(bool tracking = false)
         {
-            var query = PrepareQuery();
-            return await base.Get();
+            return await base.Get(tracking);
         }
     }
 }

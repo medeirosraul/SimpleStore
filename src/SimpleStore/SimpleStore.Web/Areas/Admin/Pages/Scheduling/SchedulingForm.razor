@@ -1,0 +1,193 @@
+﻿@using SimpleStore.Core.Services.Schedules
+@using SimpleStore.Core.Entities.Schedules
+@inject IScheduleService ScheduleService
+@inject IScheduleDateService ScheduleDateService
+@inject IScheduleActivityService ScheduleActivityService
+@inject IPeriodProvider PeriodProvider
+<Form id="schedule-form" Model="@Model" OnValidSubmit="@Save">
+    @if (!string.IsNullOrWhiteSpace(Id))
+    {
+        <FormField @bind-Value="@Model.Id" Label="ID" InputType="ValueOnly" />
+    }
+    <FormField @bind-Value="@Model.Name" Label="Nome da Atividade" />
+    <FormField @bind-Value="@Model.Duration" Label="Duração em minutos" />
+    <FormField TValue="string" Value="ScheduleId" ValueChanged="@(async id => await ScheduleIdChanged(id))" ValueExpression="@(() => ScheduleId)" Label="Agenda" InputType="Select">
+        <SelectOptions>
+            @if (Schedules == null)
+            {
+                <option>Carregando...</option>
+            }
+            else
+            {
+                if (Schedules.Count == 0)
+                {
+                    <option>Nenhuma agenda disponível</option>
+                }
+                else
+                {
+                    <option value="">Selecione</option>
+                    foreach (var schedule in Schedules)
+                    {
+                        <option value="@schedule.Id">@schedule.Name</option>
+                    }
+                }
+            }
+        </SelectOptions>
+    </FormField>
+
+    @if(!string.IsNullOrWhiteSpace(ScheduleId)) 
+    {
+        <div class="row mb-sm-3">
+            <label class="col-form-label text-sm-end inline">Data e Hora</label>
+            <div class="col-12 col-sm input-container">
+                <h3 class="mb-0">
+                    <button class="btn btn-light" type="button" @onclick="@(async () => await AddMonth(-1))"><span class="iconify" data-icon="fluent:arrow-up-20-regular" data-width="20" data-height="20"></span></button>
+                    <button class="btn btn-light" type="button" @onclick="@(async () => await AddMonth(1))"><span class="iconify" data-icon="fluent:arrow-down-20-regular" data-width="20" data-height="20"></span></button>
+                    @BaseDate.ToString("MMMM 'de' yyyy")
+                </h3>
+
+                <hr />
+                @if (ScheduleDates == null)
+                {
+                    <p class="label-offset text-muted">Carregando...</p>
+                }
+                else if (ScheduleDates.Count == 0)
+                {
+                    <p class="label-offset text-muted">Nenhuma data disponível para o mês de  @BaseDate.ToString("MMMM 'de' yyyy")</p>
+                }
+                else
+                {
+                    @foreach (var date in ScheduleDates)
+                    {
+                        <div class="mb-3">
+                            <h5>@(date.DateTime.ToString("D"))</h5>
+                            <p>Horários disponíveis:</p>
+                            @foreach (var availableTime in GetAvailableTimes(date))
+                            {
+                                <span class="col-auto pill me-2 mb-2">@($"{availableTime.Init.ToString("HH:mm")}")</span>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            
+        </div>
+    }
+    else
+    {
+        <p class="label-offset text-muted">Selecione uma agenda.</p>
+    }
+</Form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string ScheduleId { get; set; }
+
+    [Parameter]
+    public string DateId { get; set; }
+
+    [Parameter]
+    public DateTime BaseDate { get; set; } = DateTime.Now;
+
+    [Parameter]
+    public ScheduleActivity Model { get; set; }
+
+    [Parameter]
+    public ICollection<Schedule> Schedules { get; set; }
+
+    [Parameter]
+    public ICollection<ScheduleDate> ScheduleDates { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessSubmit { get; set; }
+
+    [CascadingParameter]
+    public NotificationsHub NotificationsHub { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Model == null)
+            Model = new ScheduleActivity
+            {
+                Duration = 60
+            };
+
+        await LoadSchedules();
+
+        if (!string.IsNullOrEmpty(Id))
+            await Load(Id);
+
+    }
+
+    public async Task Save()
+    {
+        if (await ScheduleActivityService.InsertOrUpdate(Model) > 0)
+            NotificationsHub.Send(new Notification
+            {
+                Message = "As alterações foram salvas.",
+                Type = NotificationType.Success
+            });
+
+        await OnSuccessSubmit.InvokeAsync();
+    }
+
+    private async Task ScheduleIdChanged(string id)
+    {
+        ScheduleId = id;
+        await LoadScheduleDates();
+    }
+
+    private async Task Load(string id)
+    {
+        Model = await ScheduleActivityService.GetById(id);
+    }
+
+    private async Task LoadSchedules()
+    {
+        Schedules = await ScheduleService.Get();
+    }
+
+    private async Task LoadScheduleDates()
+    {
+        ScheduleDates = null;
+        StateHasChanged();
+
+        ScheduleDates = await ScheduleDateService.GetBySchedule(ScheduleId, BaseDate.Year, BaseDate.Month);
+        if(ScheduleDates == null)
+        {
+            NotificationsHub.Send(new Notification
+            {
+                Message = "Erro ao carregar as datas disponíveis para a agenda selecionada.",
+                Type = NotificationType.Danger
+            });
+        }
+
+        foreach (var date in ScheduleDates)
+        {
+            date.Periods = await PeriodProvider.GetCalculatedPeriods(date);
+        }
+    }
+
+    private ICollection<ScheduleAvailableTime> GetAvailableTimes(ScheduleDate date)
+    {
+        var availableTimes = new List<ScheduleAvailableTime>();
+        if(date.Periods != null && date.Periods.Count > 0)
+        {
+            foreach(var period in date.Periods)
+            {
+                availableTimes.AddRange(period.AvailableTimes);
+            }
+        }
+
+        return availableTimes.OrderBy(x => x.Init).ToList();
+    }
+
+    private async Task AddMonth(int i)
+    {
+        BaseDate = BaseDate.AddMonths(i);
+        await LoadScheduleDates();
+    }
+}

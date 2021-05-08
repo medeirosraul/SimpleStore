@@ -28,7 +28,8 @@ namespace SimpleStore.Web
             // Database
             services.AddDbContext<StoreDbContext>(options => {
                 options.EnableDetailedErrors();
-                options.EnableSensitiveDataLogging();
+                //options.UseLoggerFactory();
+                //options.EnableSensitiveDataLogging();
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 //options.LogTo(Log.Debug, Microsoft.Extensions.Logging.LogLevel.Debug);
             });

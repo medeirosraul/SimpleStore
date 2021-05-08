@@ -1,4 +1,5 @@
 ﻿@page "/Admin/Schedules"
+@using SimpleStore.Core.Entities.Schedules
 @using SimpleStore.Core.Services.Schedules
 @using SimpleStore.Web.Areas.Admin.Models.Schedules
 @inject IScheduleService ScheduleService
@@ -28,7 +29,7 @@
 </Page>
 
 @code {
-    public PagedList<ScheduleViewModel> Schedules { get; set; }
+    public PagedList<Schedule> Schedules { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,20 +38,6 @@
 
     private async Task Fill(int page)
     {
-        var schedules = await ScheduleService.Get(page, 5, null);
-        if(schedules != null && schedules.Count > 0)
-        {
-            Schedules ??= new PagedList<ScheduleViewModel>();
-
-            Schedules.Clear();
-            Schedules.TotalCount = schedules.TotalCount;
-            Schedules.PageSize = schedules.PageSize;
-            Schedules.PageIndex = schedules.PageIndex;
-
-            foreach(var s in schedules)
-            {
-                Schedules.Add(new ScheduleViewModel().FromSchedule(s));
-            }
-        }
+        Schedules = await ScheduleService.Get(page, 5, null);
     }
 }

@@ -20,15 +20,15 @@ namespace SimpleStore.Web.Areas.Admin.Models.Schedules
 
         }
 
-        public SchedulePeriodViewModel(Period schedule)
+        public SchedulePeriodViewModel(SchedulePeriod schedule)
         {
             FromPeriod(schedule);
         }
 
-        public SchedulePeriodViewModel FromPeriod(Period period)
+        public SchedulePeriodViewModel FromPeriod(SchedulePeriod period)
         {
             Id = period.Id;
-            DayId = period.DayId;
+            DayId = period.DateId;
             Init = period.Init;
             End = period.End;
             Granularity = period.Granularity;
@@ -36,12 +36,12 @@ namespace SimpleStore.Web.Areas.Admin.Models.Schedules
             return this;
         }
 
-        public Period ToPeriod()
+        public SchedulePeriod ToPeriod()
         {
-            return new Period
+            return new SchedulePeriod
             {
                 Id = Id,
-                DayId = DayId,
+                DateId = DayId,
                 Init = Init,
                 End = End,
                 Granularity = Granularity

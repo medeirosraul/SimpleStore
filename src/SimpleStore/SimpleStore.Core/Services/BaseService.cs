@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SimpleStore.Core.Data;
 using SimpleStore.Entities;
 using SimpleStore.Framework.Types;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,26 +37,26 @@ namespace SimpleStore.Core.Services
                 .AnyAsync(p => p.Id == id);
         }
 
-        public virtual async Task<TEntity> GetById(string id)
+        public virtual async Task<TEntity> GetById(string id, bool tracking = false)
         {
-            return await PrepareQuery()
+            return await PrepareQuery(tracking)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public virtual async Task<PagedList<TEntity>> Get()
+        public virtual async Task<PagedList<TEntity>> Get(bool tracking = false)
         {
-            return await Get(null);
+            return await Get(null, tracking);
         }
 
-        public virtual async Task<PagedList<TEntity>> Get(IQueryable<TEntity> query)
+        public virtual async Task<PagedList<TEntity>> Get(IQueryable<TEntity> query, bool tracking = false)
         {
-            query ??= PrepareQuery();
-            return await Get(1, int.MaxValue, query);
+            query ??= PrepareQuery(tracking);
+            return await Get(1, int.MaxValue, query, tracking);
         }
 
-        public virtual async Task<PagedList<TEntity>> Get(int page, int limit, IQueryable<TEntity> query)
+        public virtual async Task<PagedList<TEntity>> Get(int page, int limit, IQueryable<TEntity> query, bool tracking = false)
         {
-            query ??= PrepareQuery();
+            query ??= PrepareQuery(tracking);
 
             // Count
             var count = await query.CountAsync();
@@ -83,53 +83,63 @@ namespace SimpleStore.Core.Services
         #endregion
 
         #region Prepare
-        public virtual void TrackEntity(IEnumerable<TEntity> entities)
+
+        protected virtual void Stamp()
         {
-            foreach(var e in entities)
+            foreach (var entry in Context.ChangeTracker.Entries())
             {
-                TrackEntity(e);
+                Stamp(entry);
             }
         }
 
-        public virtual void TrackEntity(TEntity entity)
+        protected virtual void Stamp(EntityEntry entry)
         {
-            Stamp(entity);
-
-            var entry = Context.Entry(entity);
-
-            if (entry.State == EntityState.Detached && string.IsNullOrEmpty(entity.Id))
-                entry = Context.Set<TEntity>().Add(entity);
-            else if(entry.State == EntityState.Detached)
+            if (entry.State == EntityState.Added)
             {
-                entry = Context.Set<TEntity>().Update(entity);
+                (entry.Entity as Entity).CreatedAt = DateTime.Now;
+                (entry.Entity as Entity).ModifiedAt = DateTime.Now;
             }
-
-            if (entry.State == EntityState.Modified)
-                entry.Property(p => p.CreatedAt).IsModified = false;
-        }
-
-        /// <summary>
-        /// Stamp entity metadata with basic informations
-        /// </summary>
-        /// <param name="entity">Returns stamped entity</param>
-        protected virtual void Stamp(TEntity entity)
-        {
-            entity.ModifiedAt = DateTime.Now;
-            if (string.IsNullOrEmpty(entity.Id))
-                entity.CreatedAt = DateTime.Now;
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Property("CreatedAt").IsModified = false;
+                (entry.Entity as Entity).ModifiedAt = DateTime.Now;
+            }
         }
 
         #endregion
 
         public virtual async Task<int> InsertOrUpdate(TEntity entity)
         {
-            TrackEntity(entity);
+            if (string.IsNullOrEmpty(entity.Id))
+                return await Insert(entity);
+            else
+                return await Update(entity);
+        }
+
+        public virtual async Task<int> Insert(TEntity entity)
+        {
+            Context.Add(entity);
+            return await SaveChanges();
+        }
+
+        public virtual async Task<int> Update(TEntity entity)
+        {
+            // Force attach
+            var entry = Context.Entry(entity);
+
+            if(entry.State == EntityState.Detached)
+            {
+                var oldEntity = await GetById(entity.Id, true);
+                entry = Context.Entry(oldEntity);
+                entry.CurrentValues.SetValues(entity);
+            }
+
             return await SaveChanges();
         }
 
         public async Task<int> Delete(string id, bool soft = true)
         {
-            var entity = await GetById(id);
+            var entity = await GetById(id, true);
             if (entity == null) return 0;
 
             if (soft)
@@ -147,8 +157,10 @@ namespace SimpleStore.Core.Services
 
         public async Task<int> SaveChanges()
         {
+            // Stamp entries
+            Stamp();
+
             var changed = await Context.SaveChangesAsync();
-            Context.ChangeTracker.Clear();
             return changed;
         }
     }

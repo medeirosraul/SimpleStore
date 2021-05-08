@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SimpleStore.Web.Areas.Admin.Models.Schedules
 {
-    public class ScheduleDayViewModel
+    public class ScheduleDateViewModel
     {
         public string Id { get; set; }
 
@@ -15,33 +15,33 @@ namespace SimpleStore.Web.Areas.Admin.Models.Schedules
 
         public ICollection<SchedulePeriodViewModel> Periods { get; set; }
 
-        public ScheduleDayViewModel()
+        public ScheduleDateViewModel()
         {
 
         }
 
-        public ScheduleDayViewModel(Day day)
+        public ScheduleDateViewModel(ScheduleDate date)
         {
-            FromDay(day);
+            FromDate(date);
         }
 
-        public ScheduleDayViewModel FromDay(Day day)
+        public ScheduleDateViewModel FromDate(ScheduleDate date)
         {
-            Id = day.Id;
-            ScheduleId = day.ScheduleId;
-            Date = day.Date;
-            Periods = day.Periods?.Select(s => new SchedulePeriodViewModel(s)).ToList();
+            Id = date.Id;
+            ScheduleId = date.ScheduleId;
+            Date = date.DateTime;
+            Periods = date.Periods?.Select(s => new SchedulePeriodViewModel(s)).ToList();
 
             return this;
         }
 
-        public Day ToDay()
+        public ScheduleDate ToDate()
         {
-            return new Day
+            return new ScheduleDate
             {
                 Id = Id,
                 ScheduleId = ScheduleId,
-                Date = Date,
+                DateTime = Date,
                 Periods = Periods?.Select(s => s.ToPeriod()).ToList()
             };
         }

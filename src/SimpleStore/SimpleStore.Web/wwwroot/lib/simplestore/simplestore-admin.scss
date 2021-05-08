@@ -82,21 +82,88 @@ form {
     .form-check.form-switch {
         padding-top: 2px;
     }
-}
 
+    .image-drop-area {
+        padding: 15px 10px;
+        border: 2px dashed $gray-300;
+        border-radius: 5px;
+        background-color: $gray-100;
+        
+        p {
+            text-align: center;
+            padding: 15px;
+        }
+    }
+}
 /* Calendar */
 .calendar .month {
-    .row {
+    .row:not(:first-child) {
         border-top: $border-color 1px solid;
     }
+
     .row:last-child {
         border-bottom: $border-color 1px solid;
     }
+
     .day {
         border-left: $border-color 1px solid;
+        cursor: pointer;
+
+        .check-icon {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin-top: 6px;
+            margin-right: 4px;
+        }
     }
-    .day:last-child{
+
+    .day:hover:not(.disabled) {
+        h5 {
+            color: $primary;
+        }
+    }
+
+    .day:last-child {
         border-right: $border-color 1px solid;
+    }
+
+    .day.marked {
+        .check-icon {
+            opacity: 1;
+            color: $gray-400;
+        }
+    }
+
+    .day.checked {
+
+        .check-icon {
+            opacity: 1;
+            color: $primary;
+        }
+    }
+
+    .day.disabled {
+        cursor: not-allowed;
+        background-color: $gray-100;
+    }
+}
+
+.calendar {
+    .week {
+        .row {
+            border-top: $border-color 1px solid;
+            border-bottom: $border-color 1px solid;
+            min-height: 300px;
+        }
+        .day {
+            border-left: $border-color 1px solid;
+        }
+
+        .day:last-child {
+            border-right: $border-color 1px solid;
+        }
     }
 }
 
@@ -141,4 +208,20 @@ form {
 
 .text-disabled {
     color: $gray-400;
+}
+
+.opacity-100 {
+    opacity: 1;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.opacity-33 {
+    opacity: 0.33;
+}
+
+.opacity-25 {
+    opacity: 0.25;
 }

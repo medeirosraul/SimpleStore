@@ -1,35 +1,39 @@
-﻿<div class="day col @(_sameMonth ? "" : "text-disabled")" @onclick="@(async () => await OnClick.InvokeAsync(Date))">
-    <div class="square-box">
-        <div class="square-content p-1 p-sm-2">
-            <h5>
-                @Date.Day
-                @if (Checked) {
-                    <span class="text-primary ms-sm-2">
-                        <span class="iconify" data-icon="fluent:checkmark-circle-20-filled" data-width="20" data-height="20">
-                        </span>
+﻿@using System.Text
+@if (Visualization == CalendarVisualization.Week)
+{
+    <div class="day col ps-2">
+        <span class="small text-muted">@Date.ToString("dddd")</span>
+        <h5>@Date.ToString("dd/MM")</h5>
+    </div>
+}
+else
+{
+    <div class="day col @GetDayClasses()" @onclick="@Clicked">
+        <div class="square-box">
+            <div class="square-content p-1">
+                <h5>
+                    @Date.Day
+                </h5>
+                <span class="check-icon">
+                    <span class="iconify" data-icon="fluent:checkmark-20-regular" data-width="20" data-height="20">
                     </span>
-                }
-                else if (Marked)
-                {
-                    <span class="text-muted ms-sm-2">
-                        <span class="iconify" data-icon="fluent:checkmark-circle-20-filled" data-width="20" data-height="20">
-                        </span>
-                    </span>
-                }
-            </h5>
-           
+                </span>
+            </div>
         </div>
     </div>
-</div>
+}
 
 @code {
     private bool _sameMonth;
 
     [CascadingParameter]
-    public DateTime BaseDate{ get; set; }
+    public DateTime BaseDate { get; set; }
 
     [Parameter]
-    public DateTime Date{ get; set; }
+    public CalendarVisualization Visualization { get; set; }
+
+    [Parameter]
+    public DateTime Date { get; set; }
 
     [Parameter]
     public bool Checked { get; set; }
@@ -38,10 +42,46 @@
     public bool Marked { get; set; }
 
     [Parameter]
+    public bool Disabled { get; set; } = false;
+
+    [Parameter]
     public EventCallback<DateTime> OnClick { get; set; }
 
     protected override void OnParametersSet()
     {
         _sameMonth = Date.Month == BaseDate.Month;
+    }
+
+    private async Task Clicked()
+    {
+        if (!Disabled)
+            await OnClick.InvokeAsync(Date);
+    }
+
+    private string GetDayClasses()
+    {
+        var classes = new StringBuilder();
+
+        if (!_sameMonth)
+        {
+            classes.Append(" text-disabled"); 
+        }
+
+        if (Checked)
+        {
+            classes.Append(" checked");
+        }
+
+        if(Marked)
+        {
+            classes.Append(" marked");
+        }
+
+        if(Disabled)
+        {
+            classes.Append(" disabled");
+        }
+
+        return classes.ToString();
     }
 }

@@ -14,19 +14,21 @@ namespace SimpleStore.Core.Services.Schedules
 
     public class ScheduleService : StoreBaseService<Schedule>, IScheduleService
     {
-        public ScheduleService(StoreDbContext context, IStoreContext storeContext) : base(context, storeContext)
-        {
+        private readonly IScheduleDateService _scheduleDateService;
 
+        public ScheduleService(StoreDbContext context, IStoreContext storeContext, IScheduleDateService scheduleDateService) : base(context, storeContext)
+        {
+            _scheduleDateService = scheduleDateService;
         }
 
-        public override async Task<Schedule> GetById(string id)
+        public override async Task<Schedule> GetById(string id, bool tracking = false)
         {
-            var query = PrepareQuery()
+            var query = PrepareQuery(tracking)
                 .Where(p => p.Id == id)
-                .Include(p => p.Days.OrderBy(day => day.Date))
+                .Include(p => p.Dates.Where(date => !date.Deleted).OrderBy(day => day.DateTime))
                 .ThenInclude(p => p.Periods.OrderBy(period => period.Init));
 
-            var result = await Get(query);
+            var result = await Get(query, tracking);
             return result.FirstOrDefault();
         }
     }

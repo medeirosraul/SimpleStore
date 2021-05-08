@@ -1,7 +1,8 @@
 ﻿@using SimpleStore.Core.Services.Products
-@using SimpleStore.Web.Areas.Admin.Models.CatalogItems
-@using SimpleStore.Core.Entities.CatalogItems;
-@inject IProductService ProductService
+@using SimpleStore.Core.Entities.Prices
+@using SimpleStore.Core.Entities.CatalogItems
+
+@inherits OwningComponentBase
 <Form id="product-form" Model="@Model" OnValidSubmit="@Save">
     <TabContainer>
         <Navigation>
@@ -31,12 +32,16 @@
                 <FormField @bind-Value="@Model.Sku" Label="SKU" />
                 <FormField @bind-Value="@Model.Gtin" Label="GTIN" />
             </TabContent>
+
             <TabContent Id="price">
-                <FormField @bind-Value="@Model.ActivePrice.Active" Label="Ativo" />
-                <FormField @bind-Value="@Model.ActivePrice.Value" Label="Valor" />
-                <FormField @bind-Value="@Model.ActivePrice.OldValue" Label="Valor antigo" />
-                <FormField @bind-Value="@Model.ActivePrice.Cost" Label="Custo" />
-                <Table Context="@Model.Prices" TModel="CatalogItemPriceViewModel">
+                @if (ActivePrice != null)
+                {   
+                    <FormField @bind-Value="@ActivePrice.Active" Label="Ativo" />
+                    <FormField @bind-Value="@ActivePrice.Value" Label="Valor" />
+                    <FormField @bind-Value="@ActivePrice.OldValue" Label="Valor antigo" />
+                    <FormField @bind-Value="@ActivePrice.Cost" Label="Custo" />
+                }
+                @*<Table Context="@Model.Prices">
                     <Head>
                         <tr>
                             <th>Valor</th>
@@ -48,7 +53,7 @@
                     <RowTemplate>
                         @{
                             var rowClass = "";
-                            if (context.Id == Model.ActivePrice.Id)
+                            if (context.Id == ActivePrice?.Id)
                             {
                                 rowClass = "bg-dark text-light";
                             }
@@ -60,7 +65,7 @@
                             <td>@context.Active</td>
                         </tr>
                     </RowTemplate>
-                </Table>
+                </Table>*@
             </TabContent>
 
             @if (!string.IsNullOrEmpty(Model.Id))
@@ -75,44 +80,54 @@
 </Form>
 
 @code {
+    private ICatalogItemService _catalogItemService;
+
     [Parameter]
     public string Id { get; set; }
 
     [Parameter]
-    public CatalogItemViewModel Model { get; set; }
+    public CatalogItem Model { get; set; }
+
+    [Parameter]
+    public Price ActivePrice { get; set; }
 
     [Parameter]
     public EventCallback OnSuccessSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (Model == null)
-            Model = new CatalogItemViewModel();
+        // Services
+        _catalogItemService = (ICatalogItemService)ScopedServices.GetService(typeof(ICatalogItemService));
 
-        if (string.IsNullOrEmpty(Id))
-            return;
-
-        await Load(Id);
+        // Model
+        Model = new CatalogItem();
+        if(!string.IsNullOrWhiteSpace(Id))
+            await Load(Id);
     }
 
     public async Task Save()
     {
-        // Save or Update
-        var entity = Model.ToCatalogItem();
-        if (await ProductService.InsertOrUpdate(entity) > 0)
-            Model.FromCatalogItem(entity);
-
+        await  _catalogItemService.InsertOrUpdate(Model);
         await OnSuccessSubmit.InvokeAsync();
     }
 
     public async Task Load(string id)
     {
-        var entity = await ProductService.GetById(id);
-        Model.FromCatalogItem(entity);
+        Model = await _catalogItemService.GetById(id, true);
+        if (Model.Prices == null || !Model.Prices.Any())
+        {
+            Model.Prices ??= new List<Price>();
+            Model.Prices.Add(new Price());
+        }
+
+        SetActivePrice();
     }
 
-    public void SetActivePrice(string id)
+    public void SetActivePrice(string id = "")
     {
-        Model.SetActivePrice(id);
+        if (string.IsNullOrEmpty(id))
+        {
+            ActivePrice = Model.Prices.FirstOrDefault();
+        }
     }
 }

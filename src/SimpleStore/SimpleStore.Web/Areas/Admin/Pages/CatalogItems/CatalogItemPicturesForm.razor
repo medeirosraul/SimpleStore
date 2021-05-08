@@ -3,8 +3,7 @@
 @using SimpleStore.Core.Entities.CatalogItems
 @using SimpleStore.Core.Services.Pictures
 @using SimpleStore.Core.Services.Products
-@using SimpleStore.Web.Areas.Admin.Models.CatalogItems
-@inject IProductPictureService ProductPictureService
+@inject ICatalogItemPictureService ProductPictureService
 
 @if (CatalogItem?.Pictures != null)
 {
@@ -35,15 +34,18 @@
 }
 
 <div class="image-drop-area">
-    Drag and drop your files here or click to open file loading dialogue...
-    <InputFile id="inputDrop"
+    <p>
+        Arraste suas imagens aqui ou clique em "Procurar".
+    </p>
+    
+    <InputFile id="input-drop" class="form-control"
                OnChange="OnInputFileChange"
                multiple />
 </div>
 
 @code {
     [Parameter]
-    public CatalogItemViewModel CatalogItem { get; set; }
+    public CatalogItem CatalogItem { get; set; }
 
     protected async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
@@ -71,13 +73,13 @@
             {
                 productPicture.Picture.StorageObject = null;
 
-                CatalogItem.Pictures ??= new List<CatalogItemPictureViewModel>();
-                CatalogItem.Pictures.Add(new CatalogItemPictureViewModel().FromCatalogItemPicture(productPicture));
+                CatalogItem.Pictures ??= new List<CatalogItemPicture>();
+                CatalogItem.Pictures.Add(productPicture);
             }
         }
     }
 
-    protected async Task RemovePicture(CatalogItemPictureViewModel picture)
+    protected async Task RemovePicture(CatalogItemPicture picture)
     {
         await ProductPictureService.Delete(picture.Id, false);
         CatalogItem.Pictures.Remove(picture);

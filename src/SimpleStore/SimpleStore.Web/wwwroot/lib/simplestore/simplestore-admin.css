@@ -7447,18 +7447,60 @@ form {
     max-width: 650px; }
   form .form-check.form-switch {
     padding-top: 2px; }
+  form .image-drop-area {
+    padding: 15px 10px;
+    border: 2px dashed #dee2e6;
+    border-radius: 5px;
+    background-color: #f8f9fa; }
+    form .image-drop-area p {
+      text-align: center;
+      padding: 15px; }
 
 /* Calendar */
-.calendar .month .row {
+.calendar .month .row:not(:first-child) {
   border-top: #dee2e6 1px solid; }
 
 .calendar .month .row:last-child {
   border-bottom: #dee2e6 1px solid; }
 
 .calendar .month .day {
-  border-left: #dee2e6 1px solid; }
+  border-left: #dee2e6 1px solid;
+  cursor: pointer; }
+  .calendar .month .day .check-icon {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 6px;
+    margin-right: 4px; }
+
+.calendar .month .day:hover:not(.disabled) h5, .calendar .month .day:hover:not(.disabled) .h5 {
+  color: #0d6efd; }
 
 .calendar .month .day:last-child {
+  border-right: #dee2e6 1px solid; }
+
+.calendar .month .day.marked .check-icon {
+  opacity: 1;
+  color: #ced4da; }
+
+.calendar .month .day.checked .check-icon {
+  opacity: 1;
+  color: #0d6efd; }
+
+.calendar .month .day.disabled {
+  cursor: not-allowed;
+  background-color: #f8f9fa; }
+
+.calendar .week .row {
+  border-top: #dee2e6 1px solid;
+  border-bottom: #dee2e6 1px solid;
+  min-height: 300px; }
+
+.calendar .week .day {
+  border-left: #dee2e6 1px solid; }
+
+.calendar .week .day:last-child {
   border-right: #dee2e6 1px solid; }
 
 /* Pills */
@@ -7496,3 +7538,15 @@ form {
 
 .text-disabled {
   color: #ced4da; }
+
+.opacity-100 {
+  opacity: 1; }
+
+.opacity-50 {
+  opacity: 0.5; }
+
+.opacity-33 {
+  opacity: 0.33; }
+
+.opacity-25 {
+  opacity: 0.25; }

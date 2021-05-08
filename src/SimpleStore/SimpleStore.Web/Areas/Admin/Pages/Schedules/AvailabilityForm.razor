@@ -1,4 +1,5 @@
-﻿@using SimpleStore.Core.Services.Schedules
+﻿@using SimpleStore.Core.Entities.Schedules
+@using SimpleStore.Core.Services.Schedules
 @using SimpleStore.Web.Areas.Admin.Models.Schedules
 @inject IPeriodProvider PeriodProvider
 
@@ -15,8 +16,8 @@
 
         <PeriodForm @bind-Periods="TemporaryConfiguredPeriods" OnApply="PeriodsApplied"></PeriodForm>
     </div>
-
     <div class="col-12 mt-3">
+        <hr class="col-12" />
         <h4>Datas configuradas</h4>
         <div class="row">
             <div class="col-12">
@@ -25,10 +26,9 @@
                     <button class="btn btn-light" type="button" @onclick="@(() => AddMonth(1))"><span class="iconify" data-icon="fluent:arrow-down-20-regular" data-width="20" data-height="20"></span></button>
                     @BaseDate.ToString("MMMM/yyyy")
                 </h3>
-                <hr />
             </div>
             @{
-                var currentMonthDays = Days?.Where(p => p.Date.Year == BaseDate.Year && p.Date.Month == BaseDate.Month).ToList();
+                var currentMonthDays = Dates?.Where(p => p.DateTime.Year == BaseDate.Year && p.DateTime.Month == BaseDate.Month).ToList();
             }
 
             @if (currentMonthDays == null || currentMonthDays.Count == 0)
@@ -37,15 +37,15 @@
             }
             else
             {
-                foreach(var day in currentMonthDays)
+                foreach(var date in currentMonthDays)
                 {
                     var periodCounter = 1;
 
                     <div class="col-12 mt-2">
-                        <div class="card">
+                        <div class="card @(date.Deleted ? " opacity-33" : "")">
                             <div class="card-body">
-                                <h5 class="text-muted">@day.Date.ToString("D")</h5>
-                                @foreach(var period in day.Periods)
+                                <h5 class="text-muted">@date.DateTime.ToString("D")</h5>
+                                @foreach(var period in date.Periods)
                                 {
                                     <p class="mb-0 mt-2">Período #@periodCounter</p>
                                     @foreach(var time in PeriodProvider.CalculateAvailableTimes(period.Init, period.End, period.Granularity))
@@ -55,6 +55,16 @@
 
                                     periodCounter++;
                                 }
+                                <div class="d-flex mt-3">
+                                    @if (date.Deleted)
+                                    {
+                                        <button type="button" class="btn btn-secondary" @onclick="@(() => UndeleteDate(date))">Desfazer exclusão</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-danger" @onclick="@(() => DeleteDate(date))">Excluir data</button>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -65,43 +75,46 @@
 </div>
 
 @code {
-    [Parameter]
-    public ICollection<ScheduleDayViewModel> Days { get; set; }
-
-    [Parameter]
-    public EventCallback<ICollection<ScheduleDayViewModel>> DaysChanged{ get; set; }
+    [Parameter] public ICollection<ScheduleDate> Dates { get; set; }
+    [Parameter] public EventCallback<ICollection<ScheduleDate>> DatesChanged{ get; set; }
 
     public DateTime BaseDate { get; set; } = DateTime.Now;
+    public ICollection<SchedulePeriod> TemporaryConfiguredPeriods { get; set; }
     public ICollection<DateTime> MarkedDates { get; set; } = new List<DateTime>();
     public ICollection<DateTime> TemporarySelectedDates { get; set; } = new List<DateTime>();
-    public ICollection<SchedulePeriodViewModel> TemporaryConfiguredPeriods { get; set; }
 
     protected override void OnParametersSet()
     {
         UpdateMarkedDates();
     }
 
-    private async Task PeriodsApplied(ICollection<SchedulePeriodViewModel> periods)
+    private async Task PeriodsApplied(ICollection<SchedulePeriod> periods)
     {
-        Days ??= new List<ScheduleDayViewModel>();
+        Dates ??= new List<ScheduleDate>();
         foreach (var date in TemporarySelectedDates)
         {
-            var dateToAdd = Days.FirstOrDefault(p => p.Date.Date == date.Date);
+            var dateToAdd = Dates.FirstOrDefault(p => p.DateTime.Date == date.Date);
+
             if(dateToAdd == null)
             {
-                dateToAdd = new ScheduleDayViewModel
+                dateToAdd = new ScheduleDate
                 {
-                    Date = date
+                    DateTime = date
                 };
 
-                Days.Add(dateToAdd);
+                Dates.Add(dateToAdd);
             }
 
-            dateToAdd.Periods = TemporaryConfiguredPeriods.OrderBy(p => p.Init).ToList();
+            dateToAdd.Periods = TemporaryConfiguredPeriods.Select(s => new SchedulePeriod
+            {
+                Init = new DateTime(date.Year, date.Month, date.Day, s.Init.Hour, s.Init.Minute, 0),
+                End = new DateTime(date.Year, date.Month, date.Day, s.End.Hour, s.End.Minute, 0),
+                Granularity = s.Granularity
+            }).OrderBy(p => p.Init).ToList();
         }
 
         // Sort dates
-        Days = Days.OrderBy(p => p.Date).ToList();
+        Dates = Dates.OrderBy(p => p.DateTime).ToList();
 
         // Clear temporary selected dates on calendar
         TemporarySelectedDates.Clear();
@@ -110,18 +123,28 @@
         UpdateMarkedDates();
 
         // Trigger dates changed
-        await DaysChanged.InvokeAsync(Days);
+        await DatesChanged.InvokeAsync(Dates);
+    }
+
+    private void DeleteDate(ScheduleDate date)
+    {
+        date.Deleted = true;
+    }
+
+    private void UndeleteDate(ScheduleDate date)
+    {
+        date.Deleted = false;
     }
 
     private void UpdateMarkedDates()
     {
         MarkedDates = new List<DateTime>();
 
-        if (Days == null) return;
+        if (Dates == null) return;
 
-        foreach (var day in Days)
+        foreach (var day in Dates)
         {
-            MarkedDates.Add(day.Date);
+            MarkedDates.Add(day.DateTime);
         }
     }
 

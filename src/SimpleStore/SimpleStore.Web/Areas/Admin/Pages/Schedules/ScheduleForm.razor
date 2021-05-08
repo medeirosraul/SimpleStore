@@ -1,8 +1,10 @@
-﻿@using SimpleStore.Core.Services.Schedules
+﻿@using SimpleStore.Core.Entities.Schedules
+@using SimpleStore.Core.Services.Schedules
 @using SimpleStore.Web.Areas.Admin.Models.CatalogItems
 @using SimpleStore.Web.Areas.Admin.Models.Schedules
-@inject IScheduleService ScheduleService
-<Form id="schedule-form" Model="@Model" OnValidSubmit="@Save">
+@inherits OwningComponentBase
+
+<Form id="schedule-form" Model="@Schedule" OnValidSubmit="@Save">
     <TabContainer>
         <Navigation>
             <TabLink Target="schedule-info" Active>Informações da Agenda</TabLink>
@@ -10,62 +12,69 @@
         </Navigation>
         <Content>
             <TabContent Id="schedule-info" Active>
-                @if (!string.IsNullOrWhiteSpace(Id))
-                {
-                    <FormField @bind-Value="@Model.Id" Label="ID" InputType="ValueOnly" />
+                @if (!string.IsNullOrWhiteSpace(Schedule.Id))
+                        {
+                <FormField @bind-Value="@Schedule.Id" Label="ID" InputType="ValueOnly" />
                 }
-                <FormField @bind-Value="@Model.Name" Label="Nome" />
+                <FormField @bind-Value="@Schedule.Name" Label="Nome" />
             </TabContent>
             <TabContent Id="availability">
-                <AvailabilityForm @bind-Days="Model.Days"/>
+                <AvailabilityForm @bind-Dates="Schedule.Dates" />
             </TabContent>
         </Content>
     </TabContainer>
 </Form>
 
 @code {
-    [Parameter]
-    public string Id { get; set; }
+    private IScheduleService _scheduleService;
 
-    [Parameter]
-    public ScheduleViewModel Model { get; set; }
+    [CascadingParameter] public NotificationsHub NotificationsHub { get; set; }
 
-    [Parameter]
-    public EventCallback OnSuccessSubmit { get; set; }
-
-    [CascadingParameter]
-    public NotificationsHub NotificationsHub { get;  set; }
+    [Parameter] public string Id { get; set; }
+    [Parameter] public Schedule Schedule { get; set; }
+    [Parameter] public EventCallback OnSuccessSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (Model == null)
-            Model = new ScheduleViewModel();
+        _scheduleService = (IScheduleService)ScopedServices.GetService(typeof(IScheduleService));
 
-        if (string.IsNullOrEmpty(Id))
-            return;
+        Schedule = new Schedule { Id = Id };
 
-        await Load(Id);
+        if (!string.IsNullOrWhiteSpace(Id))
+            await Load(Id);
     }
 
     public async Task Save()
     {
-        // Save or Update
-        var entity = Model.ToSchedule();
-        if (await ScheduleService.InsertOrUpdate(entity) > 0)
-            Model.FromSchedule(entity);
+        var count = 0;
 
-        NotificationsHub.Send(new Notification
+        if (string.IsNullOrEmpty(Schedule.Id))
+            count = await _scheduleService.Insert(Schedule);
+        else
+            count = await _scheduleService.Update(Schedule);
+
+        if (count > 0)
         {
-            Message = "As alterações foram salvas.",
-            Type = NotificationType.Success
-        });
+            NotificationsHub.Send(new Notification
+            {
+                Message = "As alterações foram salvas.",
+                Type = NotificationType.Success
+            });
+        }
+        else
+        {
+            NotificationsHub.Send(new Notification
+            {
+                Message = "Ocorreu um erro ao salvar as notificações.",
+                Type = NotificationType.Danger
+            });
+        }
 
         await OnSuccessSubmit.InvokeAsync();
     }
 
     public async Task Load(string id)
     {
-        var entity = await ScheduleService.GetById(id);
-        Model.FromSchedule(entity);
+        Schedule = await _scheduleService.GetById(id, true);
     }
 }

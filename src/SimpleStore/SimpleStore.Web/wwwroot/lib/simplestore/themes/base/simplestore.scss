@@ -1,4 +1,9 @@
-﻿@import "../../../bootstrap-5.0.0-beta1/scss/bootstrap.scss";
+﻿$primary: #00c2b8;
+
+/* Imports */
+@import "../../../bootstrap-5.0.0-beta1/scss/bootstrap.scss";
+
+/* Theme */
 
 /* Layout */
 header {
@@ -9,6 +14,54 @@ header {
         display:flex;
         align-items: center;
     }
+}
+
+/* Catalog */
+.catalog-section {
+    h3 {
+        font-size: calc(1rem + 0.6vw);
+        color: $gray-600;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+}
+
+/* ItemBox */
+.item-box {
+    height: 100%;
+    padding: 10px;
+    border: 1px solid transparent;
+
+    .picture {
+        margin-bottom: 0.5rem;
+        img {
+            position: absolute;
+            max-height: 100%;
+            bottom: 0;
+            right: 0;
+        }
+    }
+
+    .title {
+        h4 {
+            margin-bottom: 0;
+            text-align: center;
+            font-size: calc(0.8rem + 0.3vw);
+            font-weight: 600;
+            color: $gray-600;
+        }
+    }
+
+    .buy-box {
+        .price {
+            text-align: center;
+        }
+    }
+}
+
+.item-box:hover {
+    border: 1px solid $gray-200;
+    border-radius: 5px;
 }
 
 /* Utilities */
