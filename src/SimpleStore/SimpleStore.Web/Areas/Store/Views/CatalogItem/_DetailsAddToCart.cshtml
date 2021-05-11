@@ -1,0 +1,18 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.Catalog
+@model CatalogItemDetailsViewModel
+
+<div class="add-to-cart row">
+	<div class="col-auto">
+		<div class="input-group quantity-input-group">
+			<button class="btn btn-light" type="button">
+				<span class="iconify" data-icon="mdi:minus" width="18" height="18"></span>
+			</button>
+			<input id="quantity" class="form-control" name="quantity" value="1" />
+			<button class="btn btn-light" type="button">
+				<span class="iconify" data-icon="mdi:plus" width="18" height="18"></span>
+			</button>
+		</div>
+	</div>
+	
+	<button class="btn btn-primary text-white d-flex col-auto" type="button">Adicionar ao Carrinho</button>
+</div>

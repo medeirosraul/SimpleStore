@@ -10,6 +10,7 @@ namespace SimpleStore.Web.Areas.Store.ViewModels.Catalog
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
         public CatalogItemPriceViewModel Price { get; set; }
+        public CatalogItemPictureViewModel MainPicture { get; set; }
         public ICollection<CatalogItemPictureViewModel> Pictures { get; set; }
 
         public CatalogItemDetailsViewModel()

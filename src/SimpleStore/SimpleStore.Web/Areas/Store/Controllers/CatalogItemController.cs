@@ -3,6 +3,7 @@ using SimpleStore.Core.Services.Pictures;
 using SimpleStore.Core.Services.Prices;
 using SimpleStore.Core.Services.Products;
 using SimpleStore.Web.Areas.Store.ViewModels.Catalog;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleStore.Web.Areas.Store.Controllers
@@ -56,11 +57,14 @@ namespace SimpleStore.Web.Areas.Store.Controllers
                 var pictureViewModel = new CatalogItemPictureViewModel
                 {
                     Title = picture.Picture.Title,
-                    Url = _pictureProvider.GetProductPictureUrl(picture.Picture, 1000)
+                    Url = _pictureProvider.GetProductPictureUrl(picture.Picture, 1000),
+                    ThumbUrl = _pictureProvider.GetProductPictureUrl(picture.Picture, 100)
                 };
 
                 itemViewModel.Pictures.Add(pictureViewModel);
             }
+
+            itemViewModel.MainPicture = itemViewModel.Pictures.FirstOrDefault();
 
             return View(itemViewModel);
         }

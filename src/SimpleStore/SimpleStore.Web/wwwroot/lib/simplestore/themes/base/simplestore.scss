@@ -1,9 +1,8 @@
-﻿$primary: #00c2b8;
+﻿/* Theme */
+$primary: #00c2b8;
 
 /* Imports */
 @import "../../../bootstrap-5.0.0-beta1/scss/bootstrap.scss";
-
-/* Theme */
 
 /* Layout */
 header {
@@ -16,6 +15,19 @@ header {
     }
 }
 
+.container-fluid {
+    background-color: $gray-200;
+}
+
+.page-panel {
+    max-width: 1320px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+    background-color: white;
+}
 /* Catalog */
 .catalog-section {
     h3 {
@@ -31,16 +43,6 @@ header {
     height: 100%;
     padding: 10px;
     border: 1px solid transparent;
-
-    .picture {
-        margin-bottom: 0.5rem;
-        img {
-            position: absolute;
-            max-height: 100%;
-            bottom: 0;
-            right: 0;
-        }
-    }
 
     .title {
         h4 {
@@ -64,6 +66,38 @@ header {
     border-radius: 5px;
 }
 
+/* Item Details */
+.item-details {
+    h4 {
+        text-transform: uppercase;
+        font-size: calc(1rem + 0.3vw);
+        font-weight: 600;
+        color: $gray-700;
+    }
+
+    .price {
+        font-size: calc(1.25rem + 0.3vw);
+        color: $primary;
+        margin-bottom: 0.5rem;
+    }
+
+    .short-description {
+        color: $gray-500;
+    }
+
+    .add-to-cart {
+        .quantity-input-group {
+            button {
+                border: 1px solid $border-color;
+            }
+
+            #quantity {
+                width: 50px;
+            }
+        }
+    }
+}
+
 /* Utilities */
 
 .square-box {
@@ -78,7 +112,7 @@ header {
 }
 
 .square-content {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
@@ -87,4 +121,19 @@ header {
     left: 0;
     bottom: 0;
     right: 0;
+
+    img {
+        max-width: 100%;
+        height: auto;
+        position: absolute;
+        max-height: 100%;
+        bottom: 0;
+        right: 0;
+    }
+
+    .justify {
+        transform: translate(-50%, -50%) !important;
+        left: 50%;
+        top: 50%;
+    }
 }

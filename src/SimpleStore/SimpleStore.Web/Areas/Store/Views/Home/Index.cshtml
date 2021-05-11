@@ -2,6 +2,11 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="container">
-    @await Component.InvokeAsync("CatalogNewItems")
+<div class="row">
+    <div class="col">
+        <div class="page-panel p-2 p-lg-3">
+            @await Component.InvokeAsync("CatalogNewItems")
+        </div>
+    </div>
 </div>
+

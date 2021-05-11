@@ -1,4 +1,5 @@
-﻿/* Imports */
+﻿/* Theme */
+/* Imports */
 /*!
  * Bootstrap v5.0.0-beta1 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
@@ -7392,7 +7393,6 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important; } }
 
-/* Theme */
 /* Layout */
 header {
   border-bottom: 1px solid #dee2e6; }
@@ -7400,6 +7400,18 @@ header {
     height: 75px;
     display: flex;
     align-items: center; }
+
+.container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+  background-color: #e9ecef; }
+
+.page-panel {
+  max-width: 1320px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+  background-color: white; }
 
 /* Catalog */
 .catalog-section h3, .catalog-section .h3 {
@@ -7413,13 +7425,6 @@ header {
   height: 100%;
   padding: 10px;
   border: 1px solid transparent; }
-  .item-box .picture {
-    margin-bottom: 0.5rem; }
-    .item-box .picture img {
-      position: absolute;
-      max-height: 100%;
-      bottom: 0;
-      right: 0; }
   .item-box .title h4, .item-box .title .h4 {
     margin-bottom: 0;
     text-align: center;
@@ -7432,6 +7437,27 @@ header {
 .item-box:hover {
   border: 1px solid #e9ecef;
   border-radius: 5px; }
+
+/* Item Details */
+.item-details h4, .item-details .h4 {
+  text-transform: uppercase;
+  font-size: calc(1rem + 0.3vw);
+  font-weight: 600;
+  color: #495057; }
+
+.item-details .price {
+  font-size: calc(1.25rem + 0.3vw);
+  color: #00c2b8;
+  margin-bottom: 0.5rem; }
+
+.item-details .short-description {
+  color: #adb5bd; }
+
+.item-details .add-to-cart .quantity-input-group button {
+  border: 1px solid #dee2e6; }
+
+.item-details .add-to-cart .quantity-input-group #quantity {
+  width: 50px; }
 
 /* Utilities */
 .square-box {
@@ -7453,3 +7479,14 @@ header {
   left: 0;
   bottom: 0;
   right: 0; }
+  .square-content img {
+    max-width: 100%;
+    height: auto;
+    position: absolute;
+    max-height: 100%;
+    bottom: 0;
+    right: 0; }
+  .square-content .justify {
+    transform: translate(-50%, -50%) !important;
+    left: 50%;
+    top: 50%; }
