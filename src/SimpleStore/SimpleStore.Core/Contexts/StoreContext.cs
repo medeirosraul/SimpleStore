@@ -5,6 +5,7 @@ using Serilog;
 using SimpleStore.Core.Entities.Stores;
 using SimpleStore.Core.Services.Stores;
 using SimpleStore.Framework.Contexts;
+using System;
 using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Contexts
@@ -30,21 +31,17 @@ namespace SimpleStore.Core.Contexts
 
         public async Task SetCurrentStore()
         {
-            // Get request host
-            var host = GetHost();
-
-            // Define if is custom host or subdomain
-            var isCustomHost = !host.Contains(_configuration["Host"]);
+            if (IsSimpleStore())
+                return;
 
             // Get store
-            if (isCustomHost)
+            if (IsCustomDomain())
             {
-                _currentStore = await _storeService.GetStoreByHost(host);
+                _currentStore = await _storeService.GetStoreByHost(GetHost());
             }
-            else
+            else if(IsSubDomain())
             {
-                var subdomain = host.Split('.')[0];
-                _currentStore = await _storeService.GetStoreBySubdomain(subdomain);
+                _currentStore = await _storeService.GetStoreBySubdomain(GetSubDomain());
             }
 
             // Log
@@ -58,6 +55,29 @@ namespace SimpleStore.Core.Contexts
         {
             // Get request host
             return _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
+        }
+
+        public string GetSubDomain()
+        {
+            if (!IsSubDomain())
+                throw new InvalidOperationException("This host is not a subdomain.");
+
+            return GetHost().Split('.')[0];
+        }
+
+        public bool IsSimpleStore()
+        {
+            return GetHost().ToLower() == _configuration["Host"].ToLower();
+        }
+
+        public bool IsSubDomain()
+        {
+            return !IsSimpleStore() && !IsCustomDomain();
+        }
+
+        public bool IsCustomDomain()
+        {
+            return !GetHost().ToLower().Contains(_configuration["Host"].ToLower());
         }
     }
 }

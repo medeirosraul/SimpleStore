@@ -1,9 +1,38 @@
-﻿<header>
+﻿@inject SignInManager<StoreIdentity> SignInManager
+@inject UserManager<StoreIdentity> UserManager
+
+<header>
     <div class="container">
         <div class="row d-flex align-items-center">
             <a class="col-auto brand" href="/">Loja simplificada</a>
             <div class="col">Buscar</div>
-            <div class="col-auto">Informações do Usuário</div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#my-account">Minha Conta</button>
+            </div>
         </div>
     </div>
 </header>
+
+<div id="my-account" class="modal fade" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-right">
+        <div class="modal-content">
+            <div class="modal-body">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="d-flex flex-column">
+                        <a  class="text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name</a>
+                        <a  class="text-dark" asp-area="Identity" asp-page="/Account/Logout" title="Manage">Sair</a>
+                    </div>
+                    
+                }
+                else
+                {
+                    <div class="d-flex flex-column">
+                        <a  class="text-dark" asp-area="Identity" asp-page="/Account/Login" title="Manage">Entrar</a>
+                        <a  class="text-dark" asp-area="Identity" asp-page="/Account/Register" title="Manage">Registrar</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

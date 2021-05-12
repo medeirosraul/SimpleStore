@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 <Notifications @bind-NotificationsHub="NotificationsHub"></Notifications>
-<AuthorizeView>
+<AuthorizeView Policy="store-owner">
     <Authorized>
         <header>
             <nav class="navbar navbar-expand-sm navbar-dark pt-5">

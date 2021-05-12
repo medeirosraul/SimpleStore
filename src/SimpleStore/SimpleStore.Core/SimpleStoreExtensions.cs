@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleStore.Core.Contexts;
+using SimpleStore.Core.Entities.Identity;
 using SimpleStore.Core.Repositories;
 using SimpleStore.Core.Services.Pictures;
 using SimpleStore.Core.Services.Prices;
@@ -10,6 +12,7 @@ using SimpleStore.Core.Services.Stores;
 using SimpleStore.Core.Services.Subscriptions;
 using SimpleStore.Framework.Contexts;
 using SimpleStore.Framework.Helpers;
+using SimpleStore.Framework.Identity;
 using SimpleStore.Framework.Repositories;
 using System;
 
@@ -29,6 +32,7 @@ namespace SimpleStore.Core
 
             // Contexts
             services.AddScoped<IStoreContext, StoreContext>();
+            services.AddScoped<ICustomerContext, CustomerContext>();
 
             // Services
             services.AddScoped<SubscriptionService>();
@@ -50,6 +54,16 @@ namespace SimpleStore.Core
             services.AddScoped<IScheduleDateService, ScheduleDateService>();
             services.AddScoped<IScheduleActivityService, ScheduleActivityService>();
             services.AddScoped<IPeriodProvider, PeriodProvider>();
+
+            // Authorization
+            services.AddScoped<IUserClaimsPrincipalFactory<StoreIdentity>, StoreIdentityClaimsPrincipalFactory>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("store-owner", policy =>
+                {
+                    policy.RequireClaim("StoreOwner");
+                });
+            });
 
             // Return
             return services;

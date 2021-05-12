@@ -36,7 +36,9 @@ namespace SimpleStore.Core.Services.Subscriptions
 
         public Task<PagedList<Subscription>> GetByUser(string userId)
         {
-            return null;
+            var query = PrepareQuery();
+            query = query.Where(p => p.UserId == userId);
+            return base.Get(query);
         }
     }
 }

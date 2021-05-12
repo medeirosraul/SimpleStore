@@ -10,5 +10,13 @@ namespace SimpleStore.Framework.Contexts
         public Task SetCurrentStore();
 
         public string GetHost();
+
+        public string GetSubDomain();
+
+        public bool IsSimpleStore();
+
+        public bool IsSubDomain();
+
+        public bool IsCustomDomain();
     }
 }

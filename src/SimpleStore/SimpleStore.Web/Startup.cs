@@ -36,8 +36,18 @@ namespace SimpleStore.Web
 
             // Identity
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<StoreIdentity>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<StoreDbContext>();
+            services.AddDefaultIdentity<StoreIdentity>(
+                options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.User.RequireUniqueEmail = false;
+                    options.User.AllowedUserNameCharacters += ":";
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                }
+            ).AddEntityFrameworkStores<StoreDbContext>();
 
             services.AddSimpleStore("");
 

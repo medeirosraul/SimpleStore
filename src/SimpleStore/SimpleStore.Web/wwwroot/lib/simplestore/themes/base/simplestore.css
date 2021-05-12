@@ -7490,3 +7490,29 @@ header {
     transform: translate(-50%, -50%) !important;
     left: 50%;
     top: 50%; }
+
+.modal-dialog.modal-dialog-right {
+  height: 100%;
+  width: 300px;
+  margin: 0 auto 0 0;
+  background: #fff;
+  float: right; }
+  .modal-dialog.modal-dialog-right .modal-content {
+    height: 100%;
+    border: 0; }
+
+.modal.fade .modal-dialog.modal-dialog-right {
+  -webkit-transform: translate(100%);
+  transform: translate(100%, 0); }
+
+.modal.fade.show .modal-dialog.modal-dialog-right {
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+  flex-flow: column; }
+
+.modal-dialog-slideout .modal-content {
+  border: 0; }
+
+@media (max-width: 576px) {
+  .modal-dialog.modal-dialog-right {
+    width: 80%; } }
