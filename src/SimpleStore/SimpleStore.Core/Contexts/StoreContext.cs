@@ -17,6 +17,8 @@ namespace SimpleStore.Core.Contexts
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly StoreService _storeService;
 
+        public Store CurrentStore => _currentStore;
+
         public StoreContext(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, StoreService storeService)
         {
             _configuration = configuration;
@@ -27,7 +29,6 @@ namespace SimpleStore.Core.Contexts
             Task.Run(async () => await SetCurrentStore()).Wait();
         }
 
-        public Store CurrentStore => _currentStore;
 
         public async Task SetCurrentStore()
         {

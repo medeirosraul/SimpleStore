@@ -7,5 +7,7 @@ namespace SimpleStore.Framework.Contexts
     public interface ICustomerContext
     {
         public Customer CurrentCustomer { get; }
+
+        public Task SetCurrentCustomer();
     }
 }

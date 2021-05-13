@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleStore.Core.Data;
 
 namespace SimpleStore.Core.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210512170044_customer")]
+    partial class customer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,78 +225,6 @@ namespace SimpleStore.Core.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.Cart", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId")
-                        .IsUnique()
-                        .HasFilter("[CustomerId] IS NOT NULL");
-
-                    b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.CartItem", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CartId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CatalogItemId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("CatalogItemId");
-
-                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItem", b =>
@@ -813,26 +743,6 @@ namespace SimpleStore.Core.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.Cart", b =>
-                {
-                    b.HasOne("SimpleStore.Core.Entities.Customers.Customer", null)
-                        .WithOne("Cart")
-                        .HasForeignKey("SimpleStore.Core.Entities.Carts.Cart", "CustomerId");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.CartItem", b =>
-                {
-                    b.HasOne("SimpleStore.Core.Entities.Carts.Cart", null)
-                        .WithMany("Items")
-                        .HasForeignKey("CartId");
-
-                    b.HasOne("SimpleStore.Core.Entities.CatalogItems.CatalogItem", "CatalogItem")
-                        .WithMany()
-                        .HasForeignKey("CatalogItemId");
-
-                    b.Navigation("CatalogItem");
-                });
-
             modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItemPicture", b =>
                 {
                     b.HasOne("SimpleStore.Core.Entities.CatalogItems.CatalogItem", "CatalogItem")
@@ -908,21 +818,11 @@ namespace SimpleStore.Core.Migrations
                         .HasForeignKey("DateId");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.Cart", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItem", b =>
                 {
                     b.Navigation("Pictures");
 
                     b.Navigation("Prices");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Customers.Customer", b =>
-                {
-                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Schedule", b =>

@@ -37,6 +37,7 @@ namespace SimpleStore.Core
             // Services
             services.AddScoped<SubscriptionService>();
             services.AddScoped<StoreService>();
+            services.AddScoped<ICustomerService, CustomerService>();
 
             services.AddScoped<ICatalogItemService, CatalogItemService>();
             services.AddScoped<ICatalogItemProvider, CatalogItemProvider>();

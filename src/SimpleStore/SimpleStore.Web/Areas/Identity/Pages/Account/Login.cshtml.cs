@@ -88,11 +88,11 @@ namespace SimpleStore.Web.Areas.Identity.Pages.Account
                     username += $"+{_storeContext.GetHost()}";
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, true, lockoutOnFailure: false);
 
                 if (!result.Succeeded)
                 {
-                    result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                    result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, true, lockoutOnFailure: false);
                 }
 
                 if (result.Succeeded)
