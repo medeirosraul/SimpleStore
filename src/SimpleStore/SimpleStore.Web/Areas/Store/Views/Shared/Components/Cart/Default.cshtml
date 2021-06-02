@@ -1,0 +1,63 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.Cart
+@model CartViewModel
+
+<button type="button" class="btn btn-light me-2 d-inline-flex" data-bs-toggle="modal" data-bs-target="#my-cart">
+	<span class="iconify" data-icon="mdi:cart-outline" width="22" height="22"></span>
+	@if(Model.Items.Count > 0)
+	{
+		<span class="badge rounded-pill bg-primary ms-2">@Model.Items.Count</span>
+	}
+</button>
+
+<div id="my-cart" class="modal fade" tabindex="-1">
+	<div class="modal-dialog modal-dialog-right">
+		<div class="modal-content">
+			<div class="modal-body">
+				@if (Model.Items.Count == 0)
+				{
+					<h5>Carrinho vazio.</h5>
+				}
+				else
+				{
+					<div>
+						<h5>Itens no carrinho</h5>
+						<hr />
+					</div>
+					<div class="row">
+						@foreach (var item in Model.Items)
+						{
+							<div class="cart-item col-12 d-flex">
+								<div class="d-flex align-items-center">
+									<form asp-controller="Cart" asp-action="RemoveItem">
+										<input name="itemId" type="hidden" value="@item.CatalogItem.Id" />
+										<button class="btn btn-light me-2 d-flex">
+											<span class="iconify" data-icon="mdi:trash-outline" width="20" height="20"></span>
+										</button>
+									</form>
+								</div>
+								<div class="picture">
+									<div class="square-box">
+										<div class="square-content">
+											<img src="@item.CatalogItem.Picture" />
+										</div>
+									</div>
+								</div>
+								<div class="cart-item-details ps-2">
+									<h5>
+										@item.CatalogItem.Name
+									</h5>
+									<p>@item.Quantity x <span class="price">@item.CatalogItem.PriceValueString</span></p>
+								</div>
+							</div>
+						}
+					</div>
+					<div class="row d-flex">
+						<div class="col justify-content-center">
+							<a href="/Cart">Ver Carrinho</a>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

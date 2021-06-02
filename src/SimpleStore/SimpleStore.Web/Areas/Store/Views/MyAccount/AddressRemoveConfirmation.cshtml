@@ -1,0 +1,42 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.MyAccount
+@model CustomerAddressViewModel
+@{
+    ViewData["Title"] = "Minha Conta - Endereço";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="page-panel p-2 p-lg-3">
+            <h3>Remover endereço</h3>
+            <hr />
+            <p>
+                Tem certeza de que deseja remover o endereço?
+                <br />
+                <br />
+                <strong>@Model.Responsible</strong>
+                <br/>
+                @Model.ZipCode
+                <br />
+                @Model.Address, @Model.Number, 
+                @if (!string.IsNullOrWhiteSpace(Model.Complement))
+                {
+                    <text>@Model.Complement, </text>
+                }
+                @Model.Neighborhood
+                <br />
+                @Model.City - @Model.State
+                <br />
+            </p>
+            <form asp-action="AddressRemove" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="@Model.Id"/>
+                <button class="btn btn-danger text-white">Remover</button>
+                <a href="/MyAccount" class="btn btn-light">Voltar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

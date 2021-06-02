@@ -36,5 +36,20 @@ namespace SimpleStore.Web.Areas.Store.Controllers
                 return NotFound();
             }
         }
+
+        [HttpGet("Picture/Site/{size}/{name}")]
+        public async Task<IActionResult> Site(int size, string name)
+        {
+            try
+            {
+                var path = await _pictureProvider.GetPicturePath("Site", name, size);
+                return PhysicalFile(path, "image/jpeg");
+            }
+            catch (NullReferenceException e)
+            {
+                Log.Logger.Error(e.Message + " {name}", name);
+                return NotFound();
+            }
+        }
     }
 }

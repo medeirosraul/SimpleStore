@@ -34,24 +34,20 @@ namespace SimpleStore.Web.Areas.Store.ViewComponents
             var result = new List<CatalogItemViewModel>();
             foreach (var p in products)
             {
+                var price = await _priceProvider.GetCatalogItemPrice(p);
+
                 var product = new CatalogItemViewModel
                 {
                     Id = p.Id,
-                    Name = p.Name
-                };
-
-                // Product Price
-                var price = await _priceProvider.GetProductPrice(p);
-                product.Price = new CatalogItemPriceViewModel
-                {
-                    ValueString = _priceProvider.GetPriceValueString(price),
-                    OldValueString = _priceProvider.GetPriceOldValueString(price)
+                    Name = p.Name,
+                    PriceValueString = _priceProvider.GetPriceValueString(price),
+                    PriceOldValueString = _priceProvider.GetPriceOldValueString(price)
                 };
 
                 // Product Pictures
                 if (p.Pictures != null && p.Pictures.Count > 0)
                 {
-                    product.Picture = _pictureProvider.GetProductPictureUrl(p.Pictures.FirstOrDefault()?.Picture, 400);
+                    product.Picture = _pictureProvider.GetCatalogItemPictureUrl(p.Pictures.FirstOrDefault()?.Picture, 400);
                 }
 
                 result.Add(product);

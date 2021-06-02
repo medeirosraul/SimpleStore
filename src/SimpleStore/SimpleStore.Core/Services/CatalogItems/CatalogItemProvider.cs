@@ -9,7 +9,6 @@ namespace SimpleStore.Core.Services.Products
     public interface ICatalogItemProvider
     {
         Task<IEnumerable<CatalogItem>> GetNewCatalogItems(int quantity);
-
         Task<CatalogItem> GetCatalogItemDetails(string id);
     }
 

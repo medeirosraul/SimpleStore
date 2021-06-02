@@ -45,7 +45,13 @@ namespace SimpleStore.Core.Services.Stores
             store.Subscriptions.Add(subscription);
             return store;
         }
+        public override IQueryable<Store> PrepareQuery(bool tracking = false, bool deleted = false)
+        {
+            var query = base.PrepareQuery(tracking, deleted);
+            query = query.Include(x => x.LogoPicture);
 
+            return query;
+        }
         public async Task<Store> GetStoreBySubdomain(string subdomain)
         {
             return await PrepareQuery()

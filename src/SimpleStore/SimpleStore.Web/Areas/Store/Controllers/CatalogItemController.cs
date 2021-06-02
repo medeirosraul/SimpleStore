@@ -38,7 +38,7 @@ namespace SimpleStore.Web.Areas.Store.Controllers
             };
 
             // Price
-            var price = await _priceProvider.GetProductPrice(item);
+            var price = await _priceProvider.GetCatalogItemPrice(item);
 
             if (price != null)
             {
@@ -57,8 +57,8 @@ namespace SimpleStore.Web.Areas.Store.Controllers
                 var pictureViewModel = new CatalogItemPictureViewModel
                 {
                     Title = picture.Picture.Title,
-                    Url = _pictureProvider.GetProductPictureUrl(picture.Picture, 1000),
-                    ThumbUrl = _pictureProvider.GetProductPictureUrl(picture.Picture, 100)
+                    Url = _pictureProvider.GetCatalogItemPictureUrl(picture.Picture, 1000),
+                    ThumbUrl = _pictureProvider.GetCatalogItemPictureUrl(picture.Picture, 100)
                 };
 
                 itemViewModel.Pictures.Add(pictureViewModel);

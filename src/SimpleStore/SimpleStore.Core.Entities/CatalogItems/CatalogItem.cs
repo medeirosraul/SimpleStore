@@ -32,6 +32,10 @@ namespace SimpleStore.Core.Entities.CatalogItems
         public string Sku { get; set; }
         public string Gtin { get; set; }
 
+        #region Inventory
+
+        #endregion
+
         public ICollection<Price> Prices { get; set; }
 
         public ICollection<CatalogItemPicture> Pictures { get; set; }

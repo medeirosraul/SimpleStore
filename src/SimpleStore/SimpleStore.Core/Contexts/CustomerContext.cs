@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
 using SimpleStore.Core.Entities.Customers;
+using SimpleStore.Core.Services.Customers;
 using SimpleStore.Core.Services.Products;
 using SimpleStore.Framework.Contexts;
 using System;

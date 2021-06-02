@@ -8,7 +8,7 @@ namespace SimpleStore.Core.Services.Prices
 {
     public interface IPriceProvider
     {
-        Task<Price> GetProductPrice(CatalogItem product);
+        Task<Price> GetCatalogItemPrice(CatalogItem product);
         string GetPriceValueString(Price price);
         string GetPriceOldValueString(Price price);
     }
@@ -40,7 +40,7 @@ namespace SimpleStore.Core.Services.Prices
             return $"R${price.Value.ToString("F2")}";
         }
 
-        public async Task<Price> GetProductPrice(CatalogItem product)
+        public async Task<Price> GetCatalogItemPrice(CatalogItem product)
         {
             var prices = await _priceService.GetProductPrices(product.Id);
             return prices.OrderByDescending(p => p.Active).FirstOrDefault();

@@ -1,0 +1,68 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.MyAccount
+@model CustomerAddressViewModel
+@{
+    ViewData["Title"] = "Minha Conta - Endereço";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="page-panel p-2 p-lg-3">
+            <h3>Cadastrar novo endereço</h3>
+            <hr />
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="@Model.Id"/>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.Responsible">Responsável</label>
+                    <input asp-for="@Model.Responsible" class="form-control"/>
+                    <span asp-validation-for="@Model.Responsible" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.ZipCode">CEP</label>
+                    <input asp-for="@Model.ZipCode" class="form-control"/>
+                    <span asp-validation-for="@Model.ZipCode" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.Address">Endereço (rua, avenida, etc.)</label>
+                    <input asp-for="@Model.Address" class="form-control"/>
+                    <span asp-validation-for="@Model.Address" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.Number">Número</label>
+                    <input asp-for="@Model.Number" class="form-control"/>
+                    <span asp-validation-for="@Model.Number" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.Complement">Complemento</label>
+                    <input asp-for="@Model.Complement" class="form-control"/>
+                    <span asp-validation-for="@Model.Complement" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.Neighborhood">Bairro</label>
+                    <input asp-for="@Model.Neighborhood" class="form-control"/>
+                    <span asp-validation-for="@Model.Neighborhood" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.City">Cidade</label>
+                    <input asp-for="@Model.City" class="form-control"/>
+                    <span asp-validation-for="@Model.City" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.State">Estado</label>
+                    <input asp-for="@Model.State" class="form-control"/>
+                    <span asp-validation-for="@Model.State" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-2">
+                    <label asp-for="@Model.Country">País</label>
+                    <input asp-for="@Model.Country" class="form-control"/>
+                    <span asp-validation-for="@Model.Country" class="text-danger"></span>
+                </div>
+                <button class="btn btn-primary text-white mt-2">Salvar endereço</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

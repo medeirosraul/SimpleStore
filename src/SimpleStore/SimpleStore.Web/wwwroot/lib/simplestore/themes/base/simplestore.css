@@ -7413,6 +7413,10 @@ header {
   border-radius: 5px;
   background-color: white; }
 
+.panel {
+  padding: 15px;
+  border-radius: 5px; }
+
 /* Catalog */
 .catalog-section h3, .catalog-section .h3 {
   font-size: calc(1rem + 0.6vw);
@@ -7459,6 +7463,19 @@ header {
 .item-details .add-to-cart .quantity-input-group #quantity {
   width: 50px; }
 
+/* Cart */
+.cart-item {
+  margin-bottom: 10px; }
+  .cart-item .picture {
+    width: 100px; }
+  .cart-item .cart-item-details {
+    padding-top: 10px; }
+    .cart-item .cart-item-details .price {
+      color: #00c2b8;
+      font-size: 1rem; }
+  .cart-item h5, .cart-item .h5 {
+    font-size: 1rem; }
+
 /* Utilities */
 .square-box {
   position: relative;
@@ -7493,7 +7510,7 @@ header {
 
 .modal-dialog.modal-dialog-right {
   height: 100%;
-  width: 300px;
+  width: 400px;
   margin: 0 auto 0 0;
   background: #fff;
   float: right; }

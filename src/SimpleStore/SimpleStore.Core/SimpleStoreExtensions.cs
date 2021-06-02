@@ -4,6 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleStore.Core.Contexts;
 using SimpleStore.Core.Entities.Identity;
 using SimpleStore.Core.Repositories;
+using SimpleStore.Core.Services.Carts;
+using SimpleStore.Core.Services.Customers;
+using SimpleStore.Core.Services.Monetaries;
+using SimpleStore.Core.Services.Orders;
 using SimpleStore.Core.Services.Pictures;
 using SimpleStore.Core.Services.Prices;
 using SimpleStore.Core.Services.Products;
@@ -38,13 +42,20 @@ namespace SimpleStore.Core
             services.AddScoped<SubscriptionService>();
             services.AddScoped<StoreService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerAddressService, CustomerAddressService>();
 
             services.AddScoped<ICatalogItemService, CatalogItemService>();
             services.AddScoped<ICatalogItemProvider, CatalogItemProvider>();
             services.AddScoped<ICatalogItemPictureService, CatalogItemPictureService>();
 
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<ICartItemService, CartItemService>();
+
+            services.AddScoped<IOrderCalculationService, OrderCalculationService>();
+
             services.AddScoped<IPriceService, PriceService>();
             services.AddScoped<IPriceProvider, PriceProvider>();
+            services.AddScoped<IMonetaryService, MonetaryService>();
 
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<IPictureProvider, PictureProvider>();

@@ -12,19 +12,19 @@
         if(p.Picture != null)
         {
             <div class="row">
-            <div class="col-auto me-2" style="width: 200px;">
-                <div class="square-box">
-                    <div class="square-content">
-                        <img src="/Picture/Product/200/@p.Picture.FileName" />
+                <div class="col-auto me-2" style="width: 200px;">
+                    <div class="square-box">
+                        <div class="square-content">
+                            <img src="/Picture/Product/200/@p.Picture.FileName" />
+                        </div>
                     </div>
                 </div>
+                <div class="col-auto">
+                    <p>@p.Picture.Path/@p.Picture.FileName</p>
+                    <FormField @bind-Value="@p.Picture.Title" Label="Título"></FormField>
+                    <button type="button" class="btn btn-danger" @onclick="@(() => RemovePicture(p))">Excluir</button>
+                </div>
             </div>
-            <div class="col-auto">
-                <p>@p.Picture.Path/@p.Picture.FileName</p>
-                <FormField @bind-Value="@p.Picture.Title" Label="Título"></FormField>
-                <button type="button" class="btn btn-danger" @onclick="@(() => RemovePicture(p))">Excluir</button>
-            </div>
-        </div>
 }
         else
         {

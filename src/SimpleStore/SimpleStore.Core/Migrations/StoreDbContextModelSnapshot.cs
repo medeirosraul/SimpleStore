@@ -364,6 +364,9 @@ namespace SimpleStore.Core.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Main")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -402,8 +405,17 @@ namespace SimpleStore.Core.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("DocumentNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoreId")
                         .HasColumnType("nvarchar(max)");
@@ -414,6 +426,64 @@ namespace SimpleStore.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("SimpleStore.Core.Entities.Customers.CustomerAddress", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Complement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Neighborhood")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Responsible")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("CustomerAddresses");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Identity.Subscription", b =>
@@ -736,6 +806,9 @@ namespace SimpleStore.Core.Migrations
                     b.Property<string>("Host")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LogoPictureId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -748,6 +821,10 @@ namespace SimpleStore.Core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LogoPictureId")
+                        .IsUnique()
+                        .HasFilter("[LogoPictureId] IS NOT NULL");
 
                     b.HasIndex("Subdomain")
                         .IsUnique();
@@ -848,6 +925,13 @@ namespace SimpleStore.Core.Migrations
                     b.Navigation("Picture");
                 });
 
+            modelBuilder.Entity("SimpleStore.Core.Entities.Customers.CustomerAddress", b =>
+                {
+                    b.HasOne("SimpleStore.Core.Entities.Customers.Customer", null)
+                        .WithMany("Addresses")
+                        .HasForeignKey("CustomerId");
+                });
+
             modelBuilder.Entity("SimpleStore.Core.Entities.Identity.Subscription", b =>
                 {
                     b.HasOne("SimpleStore.Core.Entities.Identity.StoreIdentity", "Owner")
@@ -908,6 +992,15 @@ namespace SimpleStore.Core.Migrations
                         .HasForeignKey("DateId");
                 });
 
+            modelBuilder.Entity("SimpleStore.Core.Entities.Stores.Store", b =>
+                {
+                    b.HasOne("SimpleStore.Core.Entities.Pictures.Picture", "LogoPicture")
+                        .WithOne()
+                        .HasForeignKey("SimpleStore.Core.Entities.Stores.Store", "LogoPictureId");
+
+                    b.Navigation("LogoPicture");
+                });
+
             modelBuilder.Entity("SimpleStore.Core.Entities.Carts.Cart", b =>
                 {
                     b.Navigation("Items");
@@ -922,6 +1015,8 @@ namespace SimpleStore.Core.Migrations
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Customers.Customer", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Cart");
                 });
 

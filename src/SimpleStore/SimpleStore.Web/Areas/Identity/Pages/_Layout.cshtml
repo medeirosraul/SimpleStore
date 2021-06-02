@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title</title>
+	<link rel="stylesheet" href="~/lib/simplestore/themes/base/simplestore.css" />
+</head>
+<body>
+	<partial name="/Areas/Identity/Pages/_Header.cshtml" />
+
+	<main>
+		<div class="container-fluid">
+			@RenderBody()
+		</div>
+	</main>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+			integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			crossorigin="anonymous"></script>
+	<script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+	<script src="~/lib/bootstrap-5.0.0-beta1/dist/js/bootstrap.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

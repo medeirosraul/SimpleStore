@@ -1,0 +1,61 @@
+﻿@page "/Admin/Settings/Store"
+@using SimpleStore.Core.Entities.Stores
+@using SimpleStore.Core.Entities.Pictures
+@using SimpleStore.Core.Services.Stores
+@using SimpleStore.Framework.Contexts
+@inject NavigationManager Navigation
+
+@inherits OwningComponentBase
+<Page>
+    <Panel Title="Configurações da Loja">
+        <HeaderActions>
+            <button class="btn btn-primary me-2" type="submit" form="store-settings-form">
+                <span class="iconify" data-icon="fluent:save-20-filled" data-width="20" data-height="20"></span>
+                Salvar
+            </button>
+        </HeaderActions>
+        <Content>
+            @if(Model != null)
+            {
+                <Form id="store-settings-form" Model="Model" OnValidSubmit="Save">
+                    <FormField @bind-Value="@Model.Name" Label="Nome da loja" />
+                    <FormField @bind-Value="@Model.Subdomain" Label="Subdomínio" Disabled="true"/>
+                    <FormField @bind-Value="@Model.Host" Label="Host" Disabled="true"/>
+                    <FormPicture Picture="@Model.LogoPicture" PictureChanged="OnPictureChanged" Label="Logo"/>
+                </Form>
+            }
+            else
+            {
+                <p>Carregando...</p>
+            }
+            
+        </Content>
+    </Panel>
+</Page>
+
+@code{
+    private IStoreContext _storeContext;
+    private StoreService _storeService;
+    public Store Model { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        // Services
+        _storeContext = (IStoreContext)ScopedServices.GetService(typeof(IStoreContext));
+        _storeService = (StoreService)ScopedServices.GetService(typeof(StoreService));
+
+        // Load
+        Model = await _storeService.GetById(_storeContext.CurrentStore.Id);
+    }
+
+    private async Task Save()
+    {
+        await _storeService.Update(Model);
+    }
+
+    private void OnPictureChanged(Picture picture)
+    {
+        Model.LogoPicture = picture;
+        Model.LogoPictureId = picture.Id;
+    }
+}

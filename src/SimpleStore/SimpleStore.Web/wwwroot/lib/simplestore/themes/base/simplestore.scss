@@ -29,6 +29,11 @@ header {
     background-color: white;
 }
 
+.panel {
+    padding: 15px;
+    border-radius: 5px;
+}
+
 
 /* Catalog */
 .catalog-section {
@@ -100,6 +105,29 @@ header {
     }
 }
 
+/* Cart */
+.cart-item {
+    margin-bottom: 10px;
+
+    .picture {
+        width: 100px;
+    }
+
+    .cart-item-details{
+        padding-top: 10px;
+
+        .price {
+            color: $primary;
+            font-size: 1rem;
+        }
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+}
+
+
 /* Utilities */
 
 .square-box {
@@ -142,7 +170,7 @@ header {
 
 .modal-dialog.modal-dialog-right {
     height: 100%;
-    width: 300px;
+    width: 400px;
     margin: 0 auto 0 0;
     background: #fff;
     float: right;
@@ -170,6 +198,6 @@ header {
 
 @media (max-width: 576px) {
     .modal-dialog.modal-dialog-right {
-        width: 80%
+        width: 80%;
     }
 }

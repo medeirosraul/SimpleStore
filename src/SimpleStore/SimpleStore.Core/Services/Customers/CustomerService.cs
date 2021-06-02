@@ -5,7 +5,7 @@ using SimpleStore.Framework.Contexts;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SimpleStore.Core.Services.Products
+namespace SimpleStore.Core.Services.Customers
 {
     public interface ICustomerService : IStoreBaseService<Customer>
     {
@@ -24,6 +24,7 @@ namespace SimpleStore.Core.Services.Products
         public async Task<Customer> GetByUser(string userId)
         {
             var query = PrepareQuery();
+            query = query.Include(x => x.Addresses.Where(address => !address.Deleted));
             query = query.Where(p => p.UserId == userId);
 
             return await query.FirstOrDefaultAsync();

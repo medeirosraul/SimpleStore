@@ -14,14 +14,10 @@ namespace SimpleStore.Core.Services.Products
 
     public class CatalogItemService : StoreBaseService<CatalogItem>, ICatalogItemService
     {
-        private readonly IPriceService _priceService;
-
         public CatalogItemService(
             StoreDbContext context, 
-            IStoreContext storeContext, 
-            IPriceService priceService) : base(context, storeContext)
+            IStoreContext storeContext) : base(context, storeContext)
         {
-            _priceService = priceService;
         }
 
         public override async Task<CatalogItem> GetById(string id, bool tracking = false)
@@ -31,7 +27,6 @@ namespace SimpleStore.Core.Services.Products
                 .Include(p => p.Prices)
                 .Include(p => p.Pictures)
                 .ThenInclude(p => p.Picture);
-
 
             var result = await Get(query);
             return result.FirstOrDefault();

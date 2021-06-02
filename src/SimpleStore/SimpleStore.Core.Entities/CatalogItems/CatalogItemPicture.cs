@@ -17,6 +17,7 @@ namespace SimpleStore.Core.Entities.CatalogItems
     public class CatalogItemPicture: StoreEntity
     {
         public int Order { get; set; }
+        public bool Main { get; set; }
         public string PictureId { get; set; }
         public string CatalogItemId { get; set; }
 

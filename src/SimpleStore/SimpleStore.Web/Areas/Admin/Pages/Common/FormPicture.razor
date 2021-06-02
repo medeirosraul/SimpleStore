@@ -1,0 +1,115 @@
+﻿@using System.IO
+@using SimpleStore.Core.Services.Pictures
+@using SimpleStore.Core.Entities.Pictures
+
+@inherits OwningComponentBase
+
+<FormField TValue="string" InputType="Content" Label="@Label">
+    @if(Picture == null)
+    {
+	    <div class="image-drop-area">
+            <p>
+                Arraste suas imagens aqui ou clique em "Procurar".
+            </p>
+            @if (AllowMultiple)
+            {
+                <InputFile id="input-drop" class="form-control" OnChange="OnInputFileChange" multiple />
+            }
+            else
+            {
+               <InputFile id="input-drop" class="form-control" OnChange="OnInputFileChange"/> 
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-auto me-2" style="width: 200px;">
+                <div class="square-box">
+                    <div class="square-content">
+                        <img src="/Picture/Site/200/@Picture.FileName" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</FormField>
+
+@code {
+    private IPictureService _pictureService;
+
+    [Parameter]
+	public string Id { get; set; }
+
+	[Parameter]
+	public Picture Picture { get; set; }
+
+    [Parameter]
+    public EventCallback<Picture> PictureChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public bool AllowMultiple { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        // Services
+        _pictureService = (IPictureService)ScopedServices.GetService(typeof(IPictureService));
+
+        // Load
+        if (Picture == null && !string.IsNullOrWhiteSpace(Id))
+        {
+            Picture = await _pictureService.GetById(Id);
+            await PictureChanged.InvokeAsync(Picture);
+        }
+    }
+
+    protected async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        if (AllowMultiple)
+        {
+            await SaveMultiplePictures(e.GetMultipleFiles());
+        }
+        else
+        {
+            Picture = await SavePicture(e.File);
+            await PictureChanged.InvokeAsync(Picture);
+        }
+
+    }
+
+    private async Task<List<Picture>> SaveMultiplePictures(IReadOnlyList<IBrowserFile> files)
+    {
+        var list = new List<Picture>();
+        foreach (var file in files)
+        {
+            list.Add(await SavePicture(file));
+        }
+
+        return list;
+    }
+
+    private async Task<Picture> SavePicture(IBrowserFile file)
+    {
+        var picture = new Picture
+        {
+            FileName = file.Name,
+            ContentType = file.ContentType,
+            Size = file.Size
+        };
+
+        using var ms = new MemoryStream();
+        await file.OpenReadStream(9999999).CopyToAsync(ms);
+        picture.StorageObject = new Core.Entities.Storages.StorageObject();
+        picture.StorageObject.Bytes = ms.ToArray();
+
+
+        var count = await _pictureService.Insert(picture);
+        if (count <= 0)
+            throw new Exception("Não foi possível salvar a imagem.");
+
+        return picture;
+    }
+}

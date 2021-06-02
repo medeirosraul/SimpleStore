@@ -32,5 +32,20 @@ namespace SimpleStore.Core.Services.Pictures
 
             return pic;
         }
+
+        public override async Task<int> Insert(Picture picture)
+        {
+            var count = await base.Insert(picture);
+
+            if (count == 0)
+                return 0;
+
+            // Rename filename with ID
+            var extension = picture.FileName.Split('.').Last();
+            picture.FileName = picture.FileName.Replace($".{extension}", string.Empty);
+            picture.FileName += $"__{picture.Id}.{extension}";
+
+            return await Update(picture);
+        }
     }
 }

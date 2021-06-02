@@ -1,12 +1,19 @@
-﻿@inject SignInManager<StoreIdentity> SignInManager
+﻿@using SimpleStore.Core.Services.Pictures
+@using SimpleStore.Framework.Contexts
+@inject SignInManager<StoreIdentity> SignInManager
 @inject UserManager<StoreIdentity> UserManager
+@inject IStoreContext StoreContext
+@inject IPictureProvider PictureProvider
 
 <header>
     <div class="container">
         <div class="row d-flex align-items-center">
-            <a class="col-auto brand" href="/">Loja simplificada</a>
+            <a class="col-auto brand" href="/">
+                <img src="@PictureProvider.GetSitePictureUrl(StoreContext.CurrentStore.LogoPicture, 200)" />
+            </a>
             <div class="col">Buscar</div>
             <div class="col-auto">
+                @await Component.InvokeAsync(typeof(SimpleStore.Web.Areas.Store.ViewComponents.CartViewComponent))
                 <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#my-account">Minha Conta</button>
             </div>
         </div>
@@ -20,7 +27,7 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <div class="d-flex flex-column">
-                        <a  class="text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name</a>
+                        <a  class="text-dark" href="/MyAccount" title="Manage">@User.Identity.Name</a>
                         <a  class="text-dark" asp-area="Identity" asp-page="/Account/Logout" title="Manage">Sair</a>
                     </div>
                     
