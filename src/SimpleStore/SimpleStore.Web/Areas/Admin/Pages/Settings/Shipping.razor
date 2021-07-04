@@ -1,0 +1,89 @@
+﻿@page "/Admin/Settings/Shipping"
+@using SimpleStore.Core.Entities.MelhorEnvio
+@using SimpleStore.Core.Entities.Stores
+@using SimpleStore.Core.Entities.Pictures
+@using SimpleStore.Core.Services.MelhorEnvio
+@using SimpleStore.Core.Services.Stores
+@using SimpleStore.Framework.Contexts
+@using SimpleStore.Framework.Helpers
+@inject NavigationManager Navigation
+@inject IStoreContext StoreContext
+
+@inherits OwningComponentBase
+<Page>
+    <Panel Title="Configurações de Frete e Entrega">
+        <Content>
+            <TabContainer>
+                <Navigation>
+                    <TabLink Target="melhorenvio" Active>MelhorEnvio</TabLink>
+                </Navigation>
+                <Content>
+                    <TabContent Id="melhorenvio" Active>
+                        @if (MelhorEnvio != null)
+                        {
+                            <Form Model="@MelhorEnvio" OnValidSubmit="SaveMelhorEnvio">
+                                <FormField @bind-Value="@MelhorEnvio.IsSandbox" Label="Sandbox" />
+                                <FormField @bind-Value="@MelhorEnvio.ClientId" Label="Client Id" />
+                                <FormField @bind-Value="@MelhorEnvio.ClientSecret" Label="Client Secret" />
+                                <FormField @bind-Value="@MelhorEnvio.ZipCodeFrom" Label="CEP de origem" />
+                                @if (canLoginMelhorEnvio)
+                                {
+                                    @if (MelhorEnvio.IsSandbox)
+                                    {
+                                        <a class="label-offset " href="https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=@(MelhorEnvio.ClientId)&redirect_uri=https://@(StoreContext.GetHost())/Admin/Settings/Shipping/MelhorEnvioCallback&response_type=code&state=teste&scope=cart-read cart-write companies-read companies-write coupons-read coupons-write notifications-read orders-read products-read products-write purchases-read shipping-calculate shipping-cancel shipping-checkout shipping-companies shipping-generate shipping-preview shipping-print shipping-share shipping-tracking ecommerce-shipping transactions-read users-read users-write">Fazer login em Melhor Envio Sandbox</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="label-offset " href="https://melhorenvio.com.br/oauth/authorize?client_id=@(MelhorEnvio.ClientId)&redirect_uri=https://@(StoreContext.GetHost())/Admin/Settings/Shipping/MelhorEnvioCallback&response_type=code&state=teste&scope=cart-read cart-write companies-read companies-write coupons-read coupons-write notifications-read orders-read products-read products-write purchases-read shipping-calculate shipping-cancel shipping-checkout shipping-companies shipping-generate shipping-preview shipping-print shipping-share shipping-tracking ecommerce-shipping transactions-read users-read users-write">Fazer login em Melhor Envio</a>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="label-offset text-muted">Preencha o ClientId e o ClientSecret e salve para poder fazer login no MelhorEnvio.</p>
+                                }
+                                
+                                <button class="mt-3 label-offset btn btn-primary">Salvar</button>
+                            </Form>
+                        }
+                        else
+                        {
+                            <p>carregando...</p>
+                        }
+                    </TabContent>
+                </Content>
+            </TabContainer>
+        </Content>
+    </Panel>
+</Page>
+
+@code{
+    private IMelhorEnvioSettingsService _melhorEnvioSettingsService;
+    private bool canLoginMelhorEnvio;
+
+    [CascadingParameter] 
+    public NotificationsHub NotificationsHub { get; set; }
+
+    public MelhorEnvioSettings MelhorEnvio;
+
+    protected async override Task OnInitializedAsync()
+    {
+        // Services
+        _melhorEnvioSettingsService = (IMelhorEnvioSettingsService)ScopedServices.GetService(typeof(IMelhorEnvioSettingsService));
+
+        // Load
+        MelhorEnvio = await _melhorEnvioSettingsService.GetByCurrentStore();
+        canLoginMelhorEnvio = !string.IsNullOrWhiteSpace(MelhorEnvio.ClientId) && !string.IsNullOrWhiteSpace(MelhorEnvio.ClientSecret);
+    }
+
+    private async Task SaveMelhorEnvio()
+    {
+        await _melhorEnvioSettingsService.Update(MelhorEnvio);
+        NotificationsHub.Send(new Notification
+        {
+            Type = NotificationType.Success,
+            Message = "Alterações salvas com sucesso."
+        });
+
+        canLoginMelhorEnvio = !string.IsNullOrWhiteSpace(MelhorEnvio.ClientId) && !string.IsNullOrWhiteSpace(MelhorEnvio.ClientSecret);
+    }
+}

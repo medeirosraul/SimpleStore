@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services.MelhorEnvio
 {
-    public class MelhorEnvioService: IShippingMethod
+    public class MelhorEnvioService: IShippingMethodService
     {
         private const string MELHOR_ENVIO_URL = "https://melhorenvio.com.br";
         private const string MELHOR_ENVIO_URL_SANDBOX = "https://sandbox.melhorenvio.com.br";
@@ -21,17 +21,41 @@ namespace SimpleStore.Core.Services.MelhorEnvio
 
         private readonly IMelhorEnvioSettingsService _settingsService;
 
+        public string Name { get => "MelhorEnvio" ; }
+
         public MelhorEnvioService(IMelhorEnvioSettingsService settingsService)
         {
             _settingsService = settingsService;
         }
 
         #region Methods
-        public async Task<ICollection<ShippingOption>> GetShippingOptions(Cart cart)
+        public async Task<ICollection<ShippingOption>> GetShippingOptions(Cart cart, string zipcode)
         {
+            var settings = await _settingsService.GetByCurrentStore();
+
             var options = new List<ShippingOption>();
 
-            var shipment = new MelhorEnvioShipment();
+            var shipment = new MelhorEnvioShipment
+            {
+                From = new MelhorEnvioShipmentAddress { PostalCode = settings.ZipCodeFrom},
+                To = new MelhorEnvioShipmentAddress { PostalCode = zipcode},
+                Options = new MelhorEnvioShipmentOptions { OwnHand = false, Receipt = false },
+                Products = new List<MelhorEnvioShipmentProduct>()
+            };
+
+            foreach (var item in cart.Items)
+            {
+                shipment.Products.Add(new MelhorEnvioShipmentProduct
+                {
+                    Id = item.CatalogItem.Id,
+                    InsuranceValue = item.CatalogItem.Price * item.Quantity,
+                    Quantity = item.Quantity,
+                    Width = (int)item.CatalogItem.Width,
+                    Height = (int)item.CatalogItem.Height,
+                    Length = (int)item.CatalogItem.Length,
+                    Weight = item.CatalogItem.Weight
+                });
+            }
 
             var result = await PostRequest("/api/v2/me/shipment/calculate", shipment);
             var resultObject = JObject.Parse("{ \"result\": " + result + "}");
@@ -54,7 +78,7 @@ namespace SimpleStore.Core.Services.MelhorEnvio
                 options.Add(shippingOption);
             }
 
-            return options;
+            return options.OrderBy(x => x.Value).ToList();
         }
 
         public string GetCepInfo(string cep)

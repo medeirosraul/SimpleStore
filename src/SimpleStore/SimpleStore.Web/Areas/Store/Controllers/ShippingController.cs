@@ -12,7 +12,7 @@ namespace SimpleStore.Web.Areas.Store.Controllers
 
         public Task<IActionResult> Calculate(string zipcode)
         {
-
+            return null;
         }
     }
 }

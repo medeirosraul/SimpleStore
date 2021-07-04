@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SimpleStore.Core.Services.Monetaries;
 using SimpleStore.Core.Services.Pictures;
-using SimpleStore.Core.Services.Prices;
 using SimpleStore.Core.Services.Products;
 using SimpleStore.Framework.Contexts;
 using SimpleStore.Web.Areas.Store.ViewModels.Catalog;
@@ -10,44 +10,42 @@ using System.Threading.Tasks;
 
 namespace SimpleStore.Web.Areas.Store.ViewComponents
 {
-    public class CatalogNewItemsViewComponent:ViewComponent
+    public class CatalogNewProductsViewComponent:ViewComponent
     {
         private readonly IStoreContext _storeContext;
+        private readonly IMonetaryService _monetaryService;
         private readonly ICatalogItemProvider _productProvider;
-        private readonly IPriceProvider _priceProvider;
         private readonly IPictureProvider _pictureProvider;
 
-        public CatalogNewItemsViewComponent(IStoreContext storeContext, ICatalogItemProvider productProvider, IPriceProvider priceProvider, IPictureProvider pictureProvider)
+        public CatalogNewProductsViewComponent(IStoreContext storeContext, ICatalogItemProvider productProvider, IPictureProvider pictureProvider, IMonetaryService monetaryService)
         {
             _storeContext = storeContext;
             _productProvider = productProvider;
-            _priceProvider = priceProvider;
             _pictureProvider = pictureProvider;
+            _monetaryService = monetaryService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var products = await _productProvider.GetNewCatalogItems(8);
+            var products = await _productProvider.GetNewProducts(8);
 
             if (products == null || products.Count() == 0) return View(null);
 
-            var result = new List<CatalogItemViewModel>();
+            var result = new List<CatalogProductViewModel>();
             foreach (var p in products)
             {
-                var price = await _priceProvider.GetCatalogItemPrice(p);
-
-                var product = new CatalogItemViewModel
+                var product = new CatalogProductViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    PriceValueString = _priceProvider.GetPriceValueString(price),
-                    PriceOldValueString = _priceProvider.GetPriceOldValueString(price)
+                    PriceString = _monetaryService.GetValueString(p.Price),
+                    OldPriceString = _monetaryService.GetValueString(p.OldPrice)
                 };
 
                 // Product Pictures
                 if (p.Pictures != null && p.Pictures.Count > 0)
                 {
-                    product.Picture = _pictureProvider.GetCatalogItemPictureUrl(p.Pictures.FirstOrDefault()?.Picture, 400);
+                    product.Picture = _pictureProvider.GetCatalogProductPictureUrl(p.Pictures.FirstOrDefault()?.Picture, 400);
                 }
 
                 result.Add(product);

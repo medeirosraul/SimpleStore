@@ -1,7 +1,17 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace SimpleStore.Core.Entities.MelhorEnvio
 {
+    public class MelhorEnvioSettingsMap : IEntityTypeConfiguration<MelhorEnvioSettings>
+    {
+        public void Configure(EntityTypeBuilder<MelhorEnvioSettings> builder)
+        {
+            builder.ToTable("MelhorEnvioSettings");
+        }
+    }
+
     public class MelhorEnvioSettings: StoreEntity
     {
         public bool IsSandbox { get; set; }

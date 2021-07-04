@@ -1,0 +1,88 @@
+﻿@using SimpleStore.Core.Services.Catalog
+@using SimpleStore.Core.Services.Products
+@using SimpleStore.Core.Entities.Catalog
+
+@inherits OwningComponentBase
+<Form id="product-form" Model="@Model" OnValidSubmit="@Save">
+    <TabContainer>
+        <Navigation>
+            <TabLink Target="item-info" Active>Informações do item</TabLink>
+            <TabLink Target="price">Preços</TabLink>
+            <TabLink Target="inventory">Inventário</TabLink>
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                <TabLink Target="pictures">Imagens</TabLink>
+            }
+        </Navigation>
+        <Content>
+            <TabContent Id="item-info" Active>
+                @if (!string.IsNullOrWhiteSpace(Id))
+                        {
+                <FormField @bind-Value="@Model.Id" Label="ID" InputType="ValueOnly" />
+                }
+                <FormField @bind-Value="@Model.Published" Label="Publicado" />
+                <FormField @bind-Value="@Model.Name" Label="Nome" />
+                <FormField @bind-Value="@Model.ShortDescription" Label="Descrição resumida" />
+                <FormField @bind-Value="@Model.FullDescription" Label="Descrição completa" />
+                <FormField @bind-Value="@Model.Sku" Label="SKU" />
+                <FormField @bind-Value="@Model.Gtin" Label="GTIN" />
+            </TabContent>
+
+            <TabContent Id="price">  
+                <FormField @bind-Value="@Model.Price" Label="Valor" Mask="#.##0,00" MaskReverse="true"/>
+                <FormField @bind-Value="@Model.OldPrice" Label="Valor antigo" Mask="#.##0,00" MaskReverse="true"/>
+                <FormField @bind-Value="@Model.Cost" Label="Custo" Mask="#.##0,00" MaskReverse="true"/>
+            </TabContent>
+
+            <TabContent Id="inventory">
+                <FormField @bind-Value="@Model.StockQuantity" Label="Quantidade em estoque" Mask="#.##0,000" MaskReverse="true"/>
+                <FormField @bind-Value="@Model.Width" Label="Largura" Mask="#.##0,000" MaskReverse="true"/>
+                <FormField @bind-Value="@Model.Height" Label="Altura" Mask="#.##0,000" MaskReverse="true"/>
+                <FormField @bind-Value="@Model.Length" Label="Comprimento" Mask="#.##0,000" MaskReverse="true"/>
+                <FormField @bind-Value="@Model.Weight" Label="Peso" Mask="#.##0,000" MaskReverse="true"/>
+            </TabContent>
+
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                <TabContent Id="pictures">
+                    <CatalogProductPicturesForm Product="@Model" ProductService="@_catalogProductService"></CatalogProductPicturesForm>
+                </TabContent>
+            }
+        </Content>
+    </TabContainer>
+</Form>
+
+@code {
+    private ICatalogProductService _catalogProductService;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public CatalogProduct Model { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessSubmit { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Services
+        _catalogProductService = (ICatalogProductService)ScopedServices.GetService(typeof(ICatalogProductService));
+
+        // Model
+        Model = new CatalogProduct();
+        if(!string.IsNullOrWhiteSpace(Id))
+            await Load(Id);
+    }
+
+    public async Task Save()
+    {
+        await  _catalogProductService.InsertOrUpdate(Model);
+        await OnSuccessSubmit.InvokeAsync();
+    }
+
+    public async Task Load(string id)
+    {
+        Model = await _catalogProductService.GetById(id, true);
+    }
+}

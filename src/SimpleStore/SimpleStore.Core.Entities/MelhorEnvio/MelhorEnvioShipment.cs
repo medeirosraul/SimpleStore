@@ -17,7 +17,7 @@ namespace SimpleStore.Core.Entities.MelhorEnvio
         public MelhorEnvioShipmentAddress To { get; set; }
 
         [JsonProperty("products")]
-        public IEnumerable<MelhorEnvioShipmentProduct> Products { get; set; }
+        public ICollection<MelhorEnvioShipmentProduct> Products { get; set; }
 
         [JsonProperty("options")]
         public MelhorEnvioShipmentOptions Options { get; set; }

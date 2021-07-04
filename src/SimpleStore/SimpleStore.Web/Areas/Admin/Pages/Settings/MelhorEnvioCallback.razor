@@ -1,0 +1,74 @@
+﻿@page "/Admin/Settings/MelhorEnvioCallback"
+@using Microsoft.AspNetCore.WebUtilities
+@using Newtonsoft.Json.Linq
+@using RestSharp
+@using SimpleStore.Core.Services.MelhorEnvio
+@using SimpleStore.Framework.Contexts
+@using SimpleStore.Framework.Helpers
+@using System.Net
+@inject NavigationManager Navigation
+@inject IStoreContext StoreContext
+
+@inherits OwningComponentBase
+@code {
+    private IMelhorEnvioSettingsService _melhorEnvioSettingsService;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        // Services
+        _melhorEnvioSettingsService = (IMelhorEnvioSettingsService)ScopedServices.GetService(typeof(IMelhorEnvioSettingsService));
+
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("error", out var error))
+        {
+            return;
+        }
+        else if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var code))
+        {
+            await UpdateTokens(code);
+        }
+    }
+
+    private async Task UpdateTokens(string code)
+    {
+        var settings = await _melhorEnvioSettingsService.GetByCurrentStore();
+
+        // Get Access Token
+        var melhorEnvioUrl = settings.IsSandbox ? "https://sandbox.melhorenvio.com.br" : "https://melhorenvio.com.br";
+
+        var client = new RestClient($"{melhorEnvioUrl}/oauth/token");
+        client.Timeout = -1;
+        var request = new RestRequest(Method.POST);
+        request.AlwaysMultipartFormData = true;
+        request.AddHeader("Accept", "application/json");
+        request.AddParameter("grant_type", "authorization_code");
+        request.AddParameter("client_id", settings.ClientId);
+        request.AddParameter("client_secret", settings.ClientSecret);
+        request.AddParameter("redirect_uri", $"https://{StoreContext.GetHost()}/Admin/Settings/MelhorEnvioCallback");
+        request.AddParameter("code", code);
+
+        IRestResponse response = client.Execute(request);
+
+        // Validate response
+        if(response.StatusCode != HttpStatusCode.OK)
+        {
+            Navigation.NavigateTo("/Admin/Settings/Shipping");
+        }
+
+        // Save tokens
+        var contentObject = JObject.Parse(response.Content);
+        var accessToken = contentObject.Value<string>("access_token");
+        var refreshToken = contentObject.Value<string>("refresh_token");
+        var expiresIn = contentObject.Value<int>("expires_in");
+
+        settings.AccessToken = accessToken;
+        settings.RefreshToken = refreshToken;
+        
+        // Set expire date to 1 day before
+        settings.AccessTokenExpiration = DateTime.Now.AddSeconds(expiresIn).AddDays(-1);
+
+        await _melhorEnvioSettingsService.Update(settings);
+        Navigation.NavigateTo("/Admin/Settings/Shipping");
+    }
+}

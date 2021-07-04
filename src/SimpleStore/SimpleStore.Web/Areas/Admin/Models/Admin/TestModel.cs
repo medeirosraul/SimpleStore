@@ -1,4 +1,4 @@
-﻿using SimpleStore.Core.Entities.CatalogItems;
+﻿using SimpleStore.Core.Entities.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,6 @@ namespace SimpleStore.Web.Areas.Admin.Models.Admin
         public int Integer { get; set; }
         public decimal Decimal { get; set; }
         public bool Boolean { get; set; }
-        public CatalogItemType Type { get; set; }
         public DateTime Time { get; set; } = DateTime.Now;
     }
 }

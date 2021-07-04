@@ -1,8 +1,7 @@
 ﻿using SimpleStore.Entities;
 using SimpleStore.Framework.Types;
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,9 +16,12 @@ namespace SimpleStore.Core.Services
         Task<PagedList<TEntity>> Get(IQueryable<TEntity> query , bool tracking = false);
         Task<PagedList<TEntity>> Get(int page, int limit, IQueryable<TEntity> query, bool tracking = false);
         Task<int> InsertOrUpdate(TEntity entity);
-        Task<int> Insert(TEntity entity);
-        Task<int> Update(TEntity entity);
+        Task<int> Insert(TEntity entity, bool saveChanges = true);
+        Task<int> Insert(ICollection<TEntity> entities);
+        Task<int> Update(TEntity entity, bool saveChanges = true);
+        Task<int> Update(ICollection<TEntity> entities);
         Task<int> Delete(string id, bool soft = true);
+        Task<int> Delete(ICollection<TEntity> entities, bool soft = true);
         Task<int> SaveChanges();
     }
 }

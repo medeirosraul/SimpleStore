@@ -16,7 +16,7 @@ namespace SimpleStore.Core.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "6.0.0-preview.3.21201.2")
+                .HasAnnotation("ProductVersion", "6.0.0-preview.4.21253.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -246,6 +246,9 @@ namespace SimpleStore.Core.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ShippingZipCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("StoreId")
                         .HasColumnType("nvarchar(max)");
 
@@ -297,11 +300,60 @@ namespace SimpleStore.Core.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItem", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.CartShippingOption", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Method")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Selected")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartShippinhOptions");
+                });
+
+            modelBuilder.Entity("SimpleStore.Core.Entities.Catalog.CatalogProduct", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -318,12 +370,24 @@ namespace SimpleStore.Core.Migrations
                     b.Property<string>("Gtin")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Length")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("OldPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Published")
                         .HasColumnType("bit");
@@ -334,25 +398,27 @@ namespace SimpleStore.Core.Migrations
                     b.Property<string>("Sku")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
                     b.Property<string>("StoreId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Width")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CatalogItems");
+                    b.ToTable("CatalogProducts");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItemPicture", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Catalog.CatalogProductPicture", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CatalogItemId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -376,18 +442,21 @@ namespace SimpleStore.Core.Migrations
                     b.Property<string>("PictureId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("StoreId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatalogItemId");
-
                     b.HasIndex("PictureId")
                         .IsUnique()
                         .HasFilter("[PictureId] IS NOT NULL");
 
-                    b.ToTable("CatalogItemPictures");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CatalogProductPictures");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Customers.Customer", b =>
@@ -521,6 +590,53 @@ namespace SimpleStore.Core.Migrations
                     b.ToTable("Subscriptions");
                 });
 
+            modelBuilder.Entity("SimpleStore.Core.Entities.MelhorEnvio.MelhorEnvioSettings", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AccessToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("AccessTokenExpiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientSecret")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSandbox")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCodeFrom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MelhorEnvioSettings");
+                });
+
             modelBuilder.Entity("SimpleStore.Core.Entities.Pictures.Picture", b =>
                 {
                     b.Property<string>("Id")
@@ -568,49 +684,6 @@ namespace SimpleStore.Core.Migrations
                         .HasFilter("[StorageObjectId] IS NOT NULL");
 
                     b.ToTable("Pictures");
-                });
-
-            modelBuilder.Entity("SimpleStore.Core.Entities.Prices.Price", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("CatalogItemId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("OldValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("StoreId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Value")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CatalogItemId");
-
-                    b.ToTable("Prices");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.Schedule", b =>
@@ -903,26 +976,33 @@ namespace SimpleStore.Core.Migrations
                         .WithMany("Items")
                         .HasForeignKey("CartId");
 
-                    b.HasOne("SimpleStore.Core.Entities.CatalogItems.CatalogItem", "CatalogItem")
+                    b.HasOne("SimpleStore.Core.Entities.Catalog.CatalogProduct", "CatalogItem")
                         .WithMany()
                         .HasForeignKey("CatalogItemId");
 
                     b.Navigation("CatalogItem");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItemPicture", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Carts.CartShippingOption", b =>
                 {
-                    b.HasOne("SimpleStore.Core.Entities.CatalogItems.CatalogItem", "CatalogItem")
-                        .WithMany("Pictures")
-                        .HasForeignKey("CatalogItemId");
+                    b.HasOne("SimpleStore.Core.Entities.Carts.Cart", null)
+                        .WithMany("ShippingOptions")
+                        .HasForeignKey("CartId");
+                });
 
+            modelBuilder.Entity("SimpleStore.Core.Entities.Catalog.CatalogProductPicture", b =>
+                {
                     b.HasOne("SimpleStore.Core.Entities.Pictures.Picture", "Picture")
                         .WithOne()
-                        .HasForeignKey("SimpleStore.Core.Entities.CatalogItems.CatalogItemPicture", "PictureId");
+                        .HasForeignKey("SimpleStore.Core.Entities.Catalog.CatalogProductPicture", "PictureId");
 
-                    b.Navigation("CatalogItem");
+                    b.HasOne("SimpleStore.Core.Entities.Catalog.CatalogProduct", "Product")
+                        .WithMany("Pictures")
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Picture");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Customers.CustomerAddress", b =>
@@ -962,15 +1042,6 @@ namespace SimpleStore.Core.Migrations
                     b.Navigation("StorageObject");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.Prices.Price", b =>
-                {
-                    b.HasOne("SimpleStore.Core.Entities.CatalogItems.CatalogItem", "CatalogItem")
-                        .WithMany("Prices")
-                        .HasForeignKey("CatalogItemId");
-
-                    b.Navigation("CatalogItem");
-                });
-
             modelBuilder.Entity("SimpleStore.Core.Entities.Schedules.ScheduleActivity", b =>
                 {
                     b.HasOne("SimpleStore.Core.Entities.Schedules.SchedulePeriod", null)
@@ -1004,13 +1075,13 @@ namespace SimpleStore.Core.Migrations
             modelBuilder.Entity("SimpleStore.Core.Entities.Carts.Cart", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("ShippingOptions");
                 });
 
-            modelBuilder.Entity("SimpleStore.Core.Entities.CatalogItems.CatalogItem", b =>
+            modelBuilder.Entity("SimpleStore.Core.Entities.Catalog.CatalogProduct", b =>
                 {
                     b.Navigation("Pictures");
-
-                    b.Navigation("Prices");
                 });
 
             modelBuilder.Entity("SimpleStore.Core.Entities.Customers.Customer", b =>

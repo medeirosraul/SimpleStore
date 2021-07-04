@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using SimpleStore.Core.Entities.CatalogItems;
+using SimpleStore.Core.Entities.Catalog;
 using SimpleStore.Core.Entities.Pictures;
 using SimpleStore.Framework.Contexts;
 using SixLabors.ImageSharp;
@@ -18,8 +18,8 @@ namespace SimpleStore.Core.Services.Pictures
     {
         Task CreatePicturePath(string id, int size, string path, string filename, IImageEncoder encoder);
         Task<string> GetPicturePath(string relativePath, string fileName, int size);
-        string GetCatalogItemPictureUrl(Picture picture, int size);
-        string GetCatalogItemPictureUrl(CatalogItem item, int size);
+        string GetCatalogProductPictureUrl(Picture picture, int size);
+        string GetCatalogProductPictureUrl(CatalogProduct item, int size);
         string GetSitePictureUrl(Picture picture, int size);
     }
 
@@ -84,7 +84,7 @@ namespace SimpleStore.Core.Services.Pictures
             await image.SaveAsync(Path.Combine(path, filename), encoder);
         }
 
-        public string GetCatalogItemPictureUrl(Picture picture, int size)
+        public string GetCatalogProductPictureUrl(Picture picture, int size)
         {
             if (picture == null) 
                 return string.Empty;
@@ -93,10 +93,10 @@ namespace SimpleStore.Core.Services.Pictures
             return url;
         }
 
-        public string GetCatalogItemPictureUrl(CatalogItem item, int size)
+        public string GetCatalogProductPictureUrl(CatalogProduct item, int size)
         {
             var picture = item.Pictures?.FirstOrDefault();
-            return GetCatalogItemPictureUrl(picture?.Picture, size);
+            return GetCatalogProductPictureUrl(picture?.Picture, size);
         }
 
         public string GetSitePictureUrl(Picture picture, int size)

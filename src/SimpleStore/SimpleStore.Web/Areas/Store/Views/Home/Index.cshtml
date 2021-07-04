@@ -1,11 +1,12 @@
-﻿@{
+﻿@using SimpleStore.Web.Areas.Store.ViewComponents
+@{
     ViewData["Title"] = "Home page";
 }
 
 <div class="row">
     <div class="col">
         <div class="page-panel p-2 p-lg-3">
-            @await Component.InvokeAsync("CatalogNewItems")
+            @await Component.InvokeAsync(typeof(CatalogNewProductsViewComponent))
         </div>
     </div>
 </div>

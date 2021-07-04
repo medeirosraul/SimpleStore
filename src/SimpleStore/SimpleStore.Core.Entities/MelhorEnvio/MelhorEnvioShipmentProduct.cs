@@ -31,3 +31,4 @@ namespace SimpleStore.Core.Entities.MelhorEnvio
         [JsonProperty("quantity")]
         public int Quantity { get; set; }
     }
+}

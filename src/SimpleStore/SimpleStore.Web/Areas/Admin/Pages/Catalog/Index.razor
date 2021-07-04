@@ -1,0 +1,48 @@
+﻿@page "/Admin/Catalog/Products"
+@using SimpleStore.Core.Entities.Catalog
+@using SimpleStore.Core.Services.Catalog
+@using SimpleStore.Core.Services.Products
+@using SimpleStore.Framework.Types
+@inject ICatalogProductService ProductService
+
+<Page>
+    <Panel Title="Produtos">
+        <HeaderActions>
+            <a class="btn btn-primary" href="Admin/Catalog/Product/Edit">
+                <span class="iconify" data-icon="fluent:add-20-filled" data-width="20" data-height="20"></span>
+                Adicionar novo
+            </a>
+        </HeaderActions>
+        <Content>
+            <PagedTable Context="Products" OnPageChange="Fill">
+                <Head>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Publicado</th>
+                    </tr>
+                </Head>
+                <RowTemplate>
+                    <tr>
+                        <td><a href="/Admin/Catalog/Product/Edit/@context.Id">@context.Name</a></td>
+                        <td>@context.Published</td>
+                    </tr>
+                </RowTemplate>
+            </PagedTable>
+        </Content>
+    </Panel>
+</Page>
+
+@code
+{
+    public PagedList<CatalogProduct> Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Fill(1);
+    }
+
+    private async Task Fill(int page)
+    {
+        Products = await ProductService.Get(page, 5, null);
+    }
+}

@@ -1,0 +1,87 @@
+﻿@using SimpleStore.Core.Entities.Pictures
+@using System.IO
+@using SimpleStore.Core.Entities.Catalog
+@using SimpleStore.Core.Services.Catalog
+@using SimpleStore.Core.Services.Pictures
+@using SimpleStore.Core.Services.Products
+
+@if (Product?.Pictures != null)
+{
+    foreach(var p in Product.Pictures)
+    {
+        if(p.Picture != null)
+        {
+            <div class="row">
+                <div class="col-auto me-2" style="width: 200px;">
+                    <div class="square-box">
+                        <div class="square-content">
+                            <img src="/Picture/Product/200/@p.Picture.FileName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <p>@p.Picture.Path/@p.Picture.FileName</p>
+                    <FormField @bind-Value="@p.Picture.Title" Label="Título"></FormField>
+                    <button type="button" class="btn btn-danger" @onclick="@(() => RemovePicture(p))">Excluir</button>
+                </div>
+            </div>
+}
+        else
+        {
+            <p>Imagem inválida!</p>
+        }
+    }
+}
+
+<div class="image-drop-area">
+    <p>
+        Arraste suas imagens aqui ou clique em "Procurar".
+    </p>
+    
+    <InputFile id="input-drop" class="form-control"
+               OnChange="OnInputFileChange"
+               multiple />
+</div>
+
+@code {
+    [Parameter] public ICatalogProductService ProductService { get; set; }
+    [Parameter] public CatalogProduct Product { get; set; }
+
+    protected async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        foreach (var image in e.GetMultipleFiles())
+        {
+            var picture = new Core.Entities.Pictures.Picture
+            {
+                FileName = image.Name,
+                ContentType = image.ContentType,
+                Size = image.Size
+            };
+
+            using var ms = new MemoryStream();
+            await image.OpenReadStream(9999999).CopyToAsync(ms);
+            picture.StorageObject = new Core.Entities.Storages.StorageObject();
+            picture.StorageObject.Bytes = ms.ToArray();
+
+            var productPicture = new Core.Entities.Catalog.CatalogProductPicture
+            {
+                ProductId = Product.Id,
+                Picture = picture
+            };
+
+            if (await ProductService.InsertPicture(productPicture) > 0)
+            {
+                productPicture.Picture.StorageObject = null;
+
+                    Product.Pictures ??= new List<Core.Entities.Catalog.CatalogProductPicture>();
+                Product.Pictures.Add(productPicture);
+            }
+        }
+    }
+
+    protected async Task RemovePicture(Core.Entities.Catalog.CatalogProductPicture picture)
+    {
+        await ProductService.DeletePicture(picture.Id);
+        Product.Pictures.Remove(picture);
+    }
+}

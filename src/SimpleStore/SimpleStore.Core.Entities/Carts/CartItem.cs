@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SimpleStore.Core.Entities.CatalogItems;
+using SimpleStore.Core.Entities.Catalog;
 
 namespace SimpleStore.Core.Entities.Carts
 {
@@ -24,6 +24,6 @@ namespace SimpleStore.Core.Entities.Carts
         public int Quantity { get; set; }
 
         // Navigation
-        public CatalogItem CatalogItem { get; set; }
+        public CatalogProduct CatalogItem { get; set; }
     }
 }

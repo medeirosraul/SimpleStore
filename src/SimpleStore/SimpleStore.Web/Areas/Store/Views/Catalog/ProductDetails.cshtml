@@ -1,0 +1,37 @@
+﻿@model  SimpleStore.Web.Areas.Store.ViewModels.Catalog.CatalogItemDetailsViewModel
+<div class="row">
+	<div class="col-12">
+	 <div class="page-panel p-2 p-lg-3">
+		<div class="item-details row pt-3">
+			<div class="item-pictures col-12 col-lg-6">
+				<div class="square-box">
+					<div class="square-content">
+						<img src="@Model.MainPicture.Url" title="@Model.MainPicture.Title" />
+					</div>
+				</div>
+			</div>
+			<div class="item-info col-12 col-lg-6">
+				<h4>@Model.Name</h4>
+				<div class="price"></div>
+				<div class="short-description">@Model.ShortDescription</div>
+				<hr />
+				@await Html.PartialAsync("~/Areas/Store/Views/Catalog/_DetailsAddToCart.cshtml", Model)
+			</div>
+			<div class="item-description mt-3">
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button id="description-tab" class="nav-link active" data-bs-toggle="tab" data-bs-target="#description-content" type="button" role="tab">Descrição</button>
+					</li>
+				</ul>
+				<div class="tab-content p-3">
+					<div id="description-content" class="tab-pane fade show active" role="tabpanel">
+						@Model.FullDescription
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </div>
+	
+</div>
+

@@ -18,19 +18,12 @@
                 <FormField @bind-Value="@TestModel.Integer" Label="Inteiro" />
                 <FormField @bind-Value="@TestModel.Decimal" Label="Decimal" />
                 <FormField @bind-Value="@TestModel.Boolean" Label="Boolean" />
-                <FormField @bind-Value="@TestModel.Type" Label="Tipo">
-                    <SelectOptions>
-                        <option value="@SimpleStore.Core.Entities.CatalogItems.CatalogItemType.Product">Produto</option>
-                        <option value="@SimpleStore.Core.Entities.CatalogItems.CatalogItemType.Service">Serviço</option>
-                    </SelectOptions>
-                </FormField>
                 <p>
                     <span><strong>Intervalo: </strong> @TestModel.Time</span><br />
                     <span><strong>Texto: </strong> @TestModel.Text</span><br />
                     <span><strong>Inteiro: </strong> @TestModel.Integer</span><br />
                     <span><strong>Decimal: </strong> @TestModel.Decimal</span><br />
                     <span><strong>Boolean: </strong> @TestModel.Boolean</span><br />
-                    <span><strong>Type: </strong> @TestModel.Type</span><br />
                 </p>
             </Form>
         </Content>
@@ -88,8 +81,7 @@
         Text = "Texto simples",
         Integer = 1001,
         Decimal = 1001.01m,
-        Boolean = false,
-        Type = Core.Entities.CatalogItems.CatalogItemType.Service
+        Boolean = false
     };
 
     public PagedList<TestModel> list = new PagedList<TestModel>

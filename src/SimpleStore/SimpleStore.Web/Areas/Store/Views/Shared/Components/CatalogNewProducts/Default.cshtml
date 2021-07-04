@@ -1,0 +1,20 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.Catalog
+@model ICollection<CatalogProductViewModel>
+<div class="catalog-section">
+    <h3>Produtos adicionados recentemente</h3>
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="row g-0">
+            @foreach (var product in Model)
+            {
+                <div class="col-12 col-md-4 col-lg-3">
+                    @await Html.PartialAsync("~/Areas/Store/Views/Catalog/_ProductBox.cshtml", product)
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Não há produtos novos.</p>
+    }
+</div>

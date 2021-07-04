@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SimpleStore.Core.Services.Carts;
+using SimpleStore.Core.Services.Catalog;
 using SimpleStore.Core.Services.Pictures;
-using SimpleStore.Core.Services.Prices;
 using SimpleStore.Core.Services.Products;
 using SimpleStore.Framework.Contexts;
 using SimpleStore.Web.Areas.Store.ViewModels.Cart;
@@ -17,17 +17,15 @@ namespace SimpleStore.Web.Areas.Store.ViewComponents
         private readonly IStoreContext _storeContext;
         private readonly ICustomerContext _customerContext;
         private readonly ICartService _cartService;
-        private readonly ICatalogItemService _catalogItemService;
+        private readonly ICatalogProductService _catalogItemService;
         private readonly IPictureProvider _pictureProvider;
-        private readonly IPriceProvider _priceProvider;
 
-        public CartViewComponent(IStoreContext storeContext, ICustomerContext customerContext, ICartService cartService, ICatalogItemService catalogItemService, IPriceProvider priceProvider, IPictureProvider pictureProvider)
+        public CartViewComponent(IStoreContext storeContext, ICustomerContext customerContext, ICartService cartService, ICatalogProductService catalogItemService, IPictureProvider pictureProvider)
         {
             _storeContext = storeContext;
             _customerContext = customerContext;
             _cartService = cartService;
             _catalogItemService = catalogItemService;
-            _priceProvider = priceProvider;
             _pictureProvider = pictureProvider;
         }
 
@@ -43,17 +41,16 @@ namespace SimpleStore.Web.Areas.Store.ViewComponents
             foreach (var item in cart.Items)
             {
                 var catalogItem = await _catalogItemService.GetById(item.CatalogItemId);
-                var price = await _priceProvider.GetCatalogItemPrice(catalogItem);
 
-                var catalogItemViewModel = new CatalogItemViewModel
+                var catalogItemViewModel = new CatalogProductViewModel
                 {
                     Id = catalogItem.Id,
                     Name = catalogItem.Name,
-                    Picture = _pictureProvider.GetCatalogItemPictureUrl(catalogItem, 200),
-                    PriceOldValue = price.OldValue,
-                    PriceValue = price.Value,
-                    PriceOldValueString = _priceProvider.GetPriceOldValueString(price),
-                    PriceValueString = _priceProvider.GetPriceValueString(price)
+                    Picture = _pictureProvider.GetCatalogProductPictureUrl(catalogItem, 200),
+                    //PriceOldValue = price.OldValue,
+                    //PriceValue = price.Value,
+                    //PriceOldValueString = _priceProvider.GetPriceOldValueString(price),
+                    //PriceValueString = _priceProvider.GetPriceValueString(price)
                 };
 
                 var cartItemViewModel = new CartItemViewModel

@@ -4,14 +4,17 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleStore.Core.Contexts;
 using SimpleStore.Core.Entities.Identity;
 using SimpleStore.Core.Repositories;
+using SimpleStore.Core.Services;
 using SimpleStore.Core.Services.Carts;
+using SimpleStore.Core.Services.Catalog;
 using SimpleStore.Core.Services.Customers;
+using SimpleStore.Core.Services.MelhorEnvio;
 using SimpleStore.Core.Services.Monetaries;
 using SimpleStore.Core.Services.Orders;
 using SimpleStore.Core.Services.Pictures;
-using SimpleStore.Core.Services.Prices;
 using SimpleStore.Core.Services.Products;
 using SimpleStore.Core.Services.Schedules;
+using SimpleStore.Core.Services.Shipping;
 using SimpleStore.Core.Services.Stores;
 using SimpleStore.Core.Services.Subscriptions;
 using SimpleStore.Framework.Contexts;
@@ -28,8 +31,10 @@ namespace SimpleStore.Core
         {
             // Config
             //services.Configure(options);
-            // Repository
+
+            // Generics
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IStoreBaseService<>), typeof(StoreBaseService<>));
 
             // Framework
             services.AddScoped<IWebHelper, WebHelper>();
@@ -44,18 +49,19 @@ namespace SimpleStore.Core
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICustomerAddressService, CustomerAddressService>();
 
-            services.AddScoped<ICatalogItemService, CatalogItemService>();
+            services.AddScoped<ICatalogProductService, CatalogProductService>();
             services.AddScoped<ICatalogItemProvider, CatalogItemProvider>();
-            services.AddScoped<ICatalogItemPictureService, CatalogItemPictureService>();
 
             services.AddScoped<ICartService, CartService>();
-            services.AddScoped<ICartItemService, CartItemService>();
 
             services.AddScoped<IOrderCalculationService, OrderCalculationService>();
 
-            services.AddScoped<IPriceService, PriceService>();
-            services.AddScoped<IPriceProvider, PriceProvider>();
             services.AddScoped<IMonetaryService, MonetaryService>();
+
+            // Shipping
+            services.AddScoped<IShippingMethodServiceResolver, ShippingMethodServiceResolver>();
+            services.AddScoped<IShippingMethodService, MelhorEnvioService>();
+            services.AddScoped<IMelhorEnvioSettingsService, MelhorEnvioSettingsService>();
 
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<IPictureProvider, PictureProvider>();

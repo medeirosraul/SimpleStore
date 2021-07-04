@@ -1,9 +1,6 @@
 ﻿using SimpleStore.Core.Entities.Carts;
-using SimpleStore.Core.Services.Prices;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services.Orders
@@ -12,15 +9,15 @@ namespace SimpleStore.Core.Services.Orders
     {
         Task<decimal> GetSubtotal(Cart cart);
         Task<decimal> GetSubtotal(ICollection<CartItem> items);
+        Task<decimal> GetShippingValue(Cart cart);
+        Task<decimal> GetTotal(Cart cart);
     }
 
     public class OrderCalculationService : IOrderCalculationService
     {
-        private IPriceProvider _priceProvider;
-
-        public OrderCalculationService(IPriceProvider priceProvider)
+        public OrderCalculationService()
         {
-            _priceProvider = priceProvider;
+            
         }
 
         public async Task<decimal> GetSubtotal(Cart cart)
@@ -34,12 +31,26 @@ namespace SimpleStore.Core.Services.Orders
 
             foreach (var item in items)
             {
-                var price = await _priceProvider.GetCatalogItemPrice(item.CatalogItem);
-
-                subtotal += price.Value * item.Quantity;
+                subtotal += item.CatalogItem.Price * item.Quantity;
             }
 
             return subtotal;
+        }
+
+        public async Task<decimal> GetShippingValue(Cart cart)
+        {
+            var shipping = cart.ShippingOptions.FirstOrDefault(x => x.Selected);
+            if (shipping == null) return 0m;
+
+            return shipping.Value;
+        }
+
+        public async Task<decimal> GetTotal(Cart cart)
+        {
+            var subtotal = await GetSubtotal(cart);
+            var shippingTax = await GetShippingValue(cart);
+
+            return subtotal + shippingTax;
         }
     }
 }

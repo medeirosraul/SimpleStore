@@ -42,7 +42,7 @@
 									<h5>
 										@item.CatalogItem.Name
 									</h5>
-									<p>@item.Quantity x <span class="price">@item.CatalogItem.PriceValueString</span></p>
+									<p>@item.Quantity x <span class="price">@item.CatalogItem.PriceString</span></p>
 								</div>
 							</div>
 						}
@@ -54,16 +54,31 @@
 					<div class="col-12 col-md-6 col-xl-4">
 						<div class="panel bg-light">
 							<h5>Estimativa de entrega</h5>
-							<form>
+							<form asp-controller="Cart" asp-action="EstimateShipping">
 								<div class="row">
 									<label class="col-auto col-form-label">
 										CEP
 									</label>
 									<div class="col input-group">
-										<input type="text" class="form-control" />
-										<button type="button" class="btn btn-primary text-white">Calcular</button>
+										<input type="text" class="form-control" name="zipcode" value="@Model.ShippingZipCode" />
+										<button class="btn btn-primary text-white">Calcular</button>
 									</div>
 								</div>
+							</form>
+							<form id="shipping-option-form" asp-controller="Cart" asp-action="SelectShippingOption">
+								@if (Model.ShippingOptions.Count > 0)
+								{
+									<hr/>
+									foreach(var option in Model.ShippingOptions)
+									{
+										<div class="form-check panel bg-white mt-2 d-flex align-items-center">
+											<input type="radio" name="ShippingOption" value="@option.Id" id="option-@option.Id" checked="@option.Selected" onchange="this.form.submit();">
+											<label class="form-check-label ms-2" for="option-@option.Id">
+												@option.Name<br /> @option.ValueString
+											</label>
+										</div>
+									}
+								}
 							</form>
 						</div>
 						<div class="panel bg-light mt-2">
@@ -82,7 +97,7 @@
 									<span>Frete</span>
 								</div>
 								<div class="col-6 d-flex justify-content-end">
-									<span>R$0,00</span>
+									<span>@Model.ShippingValueString</span>
 								</div>
 							</div>
 							<hr />
@@ -94,7 +109,7 @@
 												<span>Total</span>
 											</div>
 											<div class="col-6 d-flex justify-content-end">
-												<span>@Model.SubtotalString</span>
+												<span>@Model.TotalString</span>
 											</div>
 										</div>
 									</div>

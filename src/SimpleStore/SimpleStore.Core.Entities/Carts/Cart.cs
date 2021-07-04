@@ -12,14 +12,18 @@ namespace SimpleStore.Core.Entities.Carts
             builder.HasMany(x => x.Items)
                 .WithOne()
                 .HasForeignKey(x => x.CartId);
+            builder.HasMany(x => x.ShippingOptions)
+                .WithOne()
+                .HasForeignKey(x => x.CartId);
         }
     }
 
     public class Cart: StoreEntity
     {
         public string CustomerId { get; set; }
-
+        public string ShippingZipCode { get; set; }
         // Navigations
-        public ICollection<CartItem> Items { get; set; }
+        public virtual ICollection<CartItem> Items { get; set; }
+        public virtual ICollection<CartShippingOption> ShippingOptions { get; set; }
     }
 }

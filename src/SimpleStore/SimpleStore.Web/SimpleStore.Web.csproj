@@ -108,6 +108,8 @@
     <None Include="wwwroot\lib\fabric-ui\dist\sass\_Responsive.scss" />
     <None Include="wwwroot\lib\fabric-ui\dist\sass\_Utility.scss" />
     <None Include="wwwroot\lib\fabric-ui\dist\sass\_Wrapper.scss" />
+    <None Include="wwwroot\lib\jquery-mask\dist\jquery.mask.js" />
+    <None Include="wwwroot\lib\jquery-mask\dist\jquery.mask.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -117,7 +119,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Store\Views\CatalogItem\" />
     <Folder Include="Areas\Store\Views\Checkout\" />
+    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>

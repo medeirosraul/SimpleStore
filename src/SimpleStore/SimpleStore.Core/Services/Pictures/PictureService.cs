@@ -33,7 +33,7 @@ namespace SimpleStore.Core.Services.Pictures
             return pic;
         }
 
-        public override async Task<int> Insert(Picture picture)
+        public override async Task<int> Insert(Picture picture, bool saveChanges = true)
         {
             var count = await base.Insert(picture);
 
