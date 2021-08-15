@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Timers;
 
-namespace SimpleStore.Web.Components.Notifications
+namespace SimpleStore.Components.Notifications
 {
     public enum NotificationType
     {

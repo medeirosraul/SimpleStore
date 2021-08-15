@@ -127,6 +127,30 @@ header {
     }
 }
 
+/* Checkout */
+
+.checkout-title {
+    background-color: $dark;
+    color: white;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.checkout-title-disabled {
+    background-color: $gray-400;
+    color: white;
+    margin-top: 15px;
+    padding: 15px;
+}
+
+.checkout-title-checked {
+    background-color: $primary;
+    color: white;
+    margin-top: 15px;
+    padding: 15px;
+}
+
+
 
 /* Utilities */
 
@@ -140,6 +164,7 @@ header {
     display: block;
     padding-top: 100%;
 }
+
 
 .square-content {
     display: flex;

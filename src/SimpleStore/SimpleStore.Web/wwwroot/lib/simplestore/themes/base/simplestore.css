@@ -7476,6 +7476,25 @@ header {
   .cart-item h5, .cart-item .h5 {
     font-size: 1rem; }
 
+/* Checkout */
+.checkout-title {
+  background-color: #212529;
+  color: white;
+  margin-top: 20px;
+  padding: 15px; }
+
+.checkout-title-disabled {
+  background-color: #ced4da;
+  color: white;
+  margin-top: 15px;
+  padding: 15px; }
+
+.checkout-title-checked {
+  background-color: #00c2b8;
+  color: white;
+  margin-top: 15px;
+  padding: 15px; }
+
 /* Utilities */
 .square-box {
   position: relative;

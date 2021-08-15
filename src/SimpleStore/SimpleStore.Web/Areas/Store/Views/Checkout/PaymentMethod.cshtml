@@ -1,0 +1,103 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.Checkout
+@model CheckoutViewModel
+@{
+	ViewData["Title"] = "Finalização da compra";
+	var selectedAddress = Model.CustomerAddresses.FirstOrDefault(x => x.Id == Model.Cart.SelectedAddress);
+}
+
+<div class="row">
+    <div class="col">
+        <div class="page-panel p-2 p-lg-3">
+			<h3>Finalização da compra</h3>
+			<div class="row">
+				<div class="col">
+					<a href="/Checkout/ShippingAddress">
+						<h5 class="checkout-title-checked"><span class="iconify me-2" data-icon="mdi:check" width="22" height="22"></span>
+							Endereço para entrega
+						</h5>
+					</a>
+					<div class="panel bg-light">
+						<p>Endereço selecionado:</p>
+						<p class="panel bg-white">
+							@if (selectedAddress != null)
+							{
+								<text>
+									<strong>@selectedAddress.Responsible</strong><br />
+									@selectedAddress.ZipCode, @selectedAddress.Address, @selectedAddress.Number<br />
+								</text>
+									
+									
+								if (!string.IsNullOrWhiteSpace(selectedAddress.Complement))
+								{
+									@selectedAddress.Complement <br />
+								}
+
+								<text>
+									@selectedAddress.Neighborhood, @selectedAddress.City - @selectedAddress.State<br />
+								</text>
+							}
+							else
+							{
+								<text>Nenhum endereço selecionado.</text>
+							}
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<a href="/Checkout/ShippingMethod">
+						<h5 class="checkout-title-checked"><span class="iconify me-2" data-icon="mdi:check" width="22" height="22"></span>
+							Forma de envio
+						</h5>
+					</a>
+					<div class="panel bg-light">
+						<p>Método de envio selecionado:</p>
+						@{
+							var selectedShippingOption = Model.Cart.ShippingOptions.FirstOrDefault(x => x.Selected);
+							if (selectedShippingOption != null)
+							{
+								<p class="panel bg-white">
+									@selectedShippingOption.Name <br />
+									@selectedShippingOption.ValueString
+								</p>
+							}
+						}
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<h5 class="checkout-title">Forma de Pagamento</h5>
+					<form id="payment-method-form" asp-controller="Checkout" asp-action="PaymentMethod" method="post">
+						<div class="panel bg-light">
+							<p>Selecione sua forma de pagamento:</p>
+							@if (Model.PaymentMethods != null && Model.PaymentMethods.Count > 0)
+							{
+								foreach (var option in Model.PaymentMethods)	
+								{
+									<div class="form-check panel bg-white mt-2 d-flex align-items-center">
+										<input type="radio" name="PaymentMethod" value="@option.Identificator" id="option-@option.Identificator" checked="@option.Selected">
+										<label class="form-check-label ms-2" for="option-@option.Identificator">
+											@option.Name
+										</label>
+									</div>
+								}
+							}
+						</div>
+						<button class="btn btn-primary text-white mt-2 float-end">Próxima etapa</button>
+						<a href="/Checkout/ShippingMethod" class="btn btn-light mt-2 me-2 float-end">Voltar</a>
+					</form>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<h5 class="checkout-title-disabled">Resumo e Finalização</h5>
+				</div>
+			</div>
+        </div>
+    </div>
+</div>

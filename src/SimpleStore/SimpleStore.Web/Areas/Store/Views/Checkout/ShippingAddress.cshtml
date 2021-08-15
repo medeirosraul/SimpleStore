@@ -1,0 +1,177 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.Checkout
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Finalização da compra";
+	var newAddressSelected = Model.NewAddress != null;
+}
+
+<div class="row">
+    <div class="col">
+        <div class="page-panel p-2 p-lg-3">
+			<h3>Finalização da compra</h3>
+			<div class="row">
+				<div class="col">
+					<h5 class="checkout-title">Endereço para entrega</h5>
+					<form id="shipping-address-form" asp-controller="Checkout" asp-action="ShippingAddress" method="post">
+						<div class="panel bg-light">
+							<p>Selecione um endereço para entrega:</p>
+							@if (Model.CustomerAddresses.Count > 0)
+							{
+								foreach(var address in Model.CustomerAddresses)
+								{
+									var selected = false;
+									if (Model.NewAddress == null && address.Id == Model.Cart.SelectedAddress)
+									{
+										selected = true;
+									}
+									<div class="form-check panel bg-white mt-2 d-flex align-items-center">
+										<input type="radio" name="AddressId" value="@address.Id" id="option-@address.Id" checked="@selected" onchange="addressChanged('@address.Id')">
+										<label class="form-check-label ms-2" for="option-@address.Id">
+											<strong>@address.Responsible</strong><br />
+											@address.ZipCode, @address.Address, @address.Number<br />
+											@if (!string.IsNullOrWhiteSpace(address.Complement))
+											{
+												@address.Complement <br />
+											}
+											@address.Neighborhood, @address.City - @address.State<br />
+										</label>
+									</div>
+								}
+							}
+
+							<div class="form-check panel bg-white mt-2 ">
+								<div class="d-flex align-items-center">
+									<input type="radio" name="AddressId" value="" id="option-" onchange="addressChanged('')" checked="@newAddressSelected">
+									<label class="form-check-label ms-2" for="option-">
+										Cadastrar novo endereço
+									</label>
+								</div>
+								
+								<div id="new-address" style="display: none">
+									<div asp-validation-summary="All" class="text-danger"></div>
+									<input type="hidden" asp-for="@Model.NewAddress.Id"/>
+
+									<div class="mb-3">
+										<label asp-for="@Model.NewAddress.Responsible" class="form-label">Responsável</label>
+										<input asp-for="@Model.NewAddress.Responsible" class="form-control"/>
+										<span asp-validation-for="@Model.NewAddress.Responsible" class="text-danger"></span>
+									</div>
+
+									<div class="row">
+										<div class="mb-3 col-12 col-md-3">
+											<label asp-for="@Model.NewAddress.ZipCode" class="form-label">CEP</label>
+											<input asp-for="@Model.NewAddress.ZipCode" class="form-control"/>
+											<span asp-validation-for="@Model.NewAddress.ZipCode" class="text-danger"></span>
+										</div>
+										<div class="mb-3 col-12 col-md-6">
+											<label asp-for="@Model.NewAddress.Address" class="form-label">Endereço (rua, avenida, etc.)</label>
+											<input asp-for="@Model.NewAddress.Address" class="form-control"/>
+											<span asp-validation-for="@Model.NewAddress.Address" class="text-danger"></span>
+										</div>
+										<div class="mb-3 col col-md-3">
+											<label asp-for="@Model.NewAddress.Number" class="form-label">Número</label>
+											<input asp-for="@Model.NewAddress.Number" class="form-control"/>
+											<span asp-validation-for="@Model.NewAddress.Number" class="text-danger"></span>
+										</div>
+									</div>
+									
+									<div class="mb-3">
+										<label asp-for="@Model.NewAddress.Complement" class="form-label">Complemento ou Referência</label>
+										<input asp-for="@Model.NewAddress.Complement" class="form-control"/>
+										<span asp-validation-for="@Model.NewAddress.Complement" class="text-danger"></span>
+									</div>
+
+									<div class="row">
+										<div class="mb-3 col-12 col-md-4">
+											<label asp-for="@Model.NewAddress.Neighborhood" class="form-label">Bairro</label>
+											<input asp-for="@Model.NewAddress.Neighborhood" class="form-control"/>
+											<span asp-validation-for="@Model.NewAddress.Neighborhood" class="text-danger"></span>
+										</div>
+										<div class="mb-3 col-12 col-md-4">
+											<label asp-for="@Model.NewAddress.City" class="form-label">Cidade</label>
+											<input asp-for="@Model.NewAddress.City" class="form-control"/>
+											<span asp-validation-for="@Model.NewAddress.City" class="text-danger"></span>
+										</div>
+										<div class="mb-3 col-12 col-md-4">
+											<label asp-for="@Model.NewAddress.State" class="form-label">Estado</label>
+											<select asp-for="@Model.NewAddress.State" class="form-select">
+												<option value="">Selecione</option>
+												<option value="AC">Acre</option>
+												<option value="AL">Alagoas</option>
+												<option value="AP">Amapá</option>
+												<option value="AM">Amazonas</option>
+												<option value="BA">Bahia</option>
+												<option value="CE">Ceará</option>
+												<option value="DF">Distrito Federal</option>
+												<option value="ES">Espírito Santo</option>
+												<option value="GO">Goiás</option>
+												<option value="MA">Maranhão</option>
+												<option value="MT">Mato Grosso</option>
+												<option value="MS">Mato Grosso do Sul</option>
+												<option value="MG">Minas Gerais</option>
+												<option value="PA">Pará</option>
+												<option value="PB">Paraíba</option>
+												<option value="PR">Paraná</option>
+												<option value="PE">Pernambuco</option>
+												<option value="PI">Piauí</option>
+												<option value="RJ">Rio de Janeiro</option>
+												<option value="RN">Rio Grande do Norte</option>
+												<option value="RS">Rio Grande do Sul</option>
+												<option value="RO">Rondônia</option>
+												<option value="RR">Roraima</option>
+												<option value="SC">Santa Catarina</option>
+												<option value="SP">São Paulo</option>
+												<option value="SE">Sergipe</option>
+												<option value="TO">Tocantins</option>
+											</select>
+											<span asp-validation-for="@Model.NewAddress.State" class="text-danger"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button class="btn btn-primary text-white mt-2 float-end">Próxima etapa</button>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h5 class="checkout-title-disabled">Forma de envio</h5>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h5 class="checkout-title-disabled">Forma de Pagamento</h5>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<h5 class="checkout-title-disabled">Resumo e Finalização</h5>
+				</div>
+			</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+	<script type="text/javascript">
+		var addressChanged = (id) => {
+			console.log('address changed');
+			if (id === "") {
+				$('#new-address').show();
+			} else {
+				$('#new-address').hide();
+			}
+		}
+		@if (newAddressSelected)
+		{
+			<text>
+				$(document).ready(() => {
+					$('#new-address').show();
+				})
+			</text>
+		}
+	</script>
+}

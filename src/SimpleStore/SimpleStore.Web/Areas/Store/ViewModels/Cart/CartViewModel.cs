@@ -9,6 +9,7 @@ namespace SimpleStore.Web.Areas.Store.ViewModels.Cart
         public ICollection<CartItemViewModel> Items {get;set;}
         public ICollection<CartShippingOptionViewModel> ShippingOptions { get; set; }
         public string ShippingZipCode { get; set; }
+        public string SelectedAddress { get; set; }
         public decimal Subtotal { get; set; }
         public string SubtotalString { get; set; }
         public decimal ShippingValue { get; set; }

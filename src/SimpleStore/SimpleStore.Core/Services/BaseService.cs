@@ -84,16 +84,40 @@ namespace SimpleStore.Core.Services
         #endregion
 
         #region Prepare
-
-        protected virtual void Stamp()
+        protected virtual void StampEntry(EntityEntry entry)
         {
-            foreach (var entry in Context.ChangeTracker.Entries())
+            // Stamp the entity
+            if(entry.Entity is Entity)
             {
-                Stamp(entry);
+                StampEntryEntity(entry);
+            }
+
+            // Stamp the navigation properties of the entity
+            if (entry.Navigations.Any())
+            {
+                foreach (var navigation in entry.Navigations)
+                {
+                    if (navigation is CollectionEntry)
+                    {
+                        if (navigation.CurrentValue != null)
+                        {
+                            foreach (var e in (IEnumerable<Entity>)navigation.CurrentValue)
+                            {
+                                var navigationEntry = Context.Entry(e);
+                                StampEntry(navigationEntry);
+                            }
+                        }
+                    }
+                    else if (navigation.CurrentValue is Entity)
+                    {
+                        var navigationEntry = Context.Entry(navigation.CurrentValue);
+                        StampEntry(navigationEntry);
+                    }
+                }
             }
         }
 
-        protected virtual void Stamp(EntityEntry entry)
+        protected virtual void StampEntryEntity(EntityEntry entry)
         {
             if (entry.State == EntityState.Added)
             {
@@ -108,6 +132,8 @@ namespace SimpleStore.Core.Services
         }
 
         #endregion
+
+        #region Operations
 
         public virtual async Task<int> InsertOrUpdate(TEntity entity)
         {
@@ -127,25 +153,46 @@ namespace SimpleStore.Core.Services
 
         public virtual async Task<int> Insert(TEntity entity, bool saveChanges = true)
         {
-            Context.Add(entity);
+            var entry = Context.Add(entity);
+
+            StampEntry(entry);
+
             if (saveChanges)
-                return await SaveChanges();
+                return await Context.SaveChangesAsync();
 
             return 0;
         }
 
+        #endregion
+
         public virtual async Task<int> Update(TEntity entity, bool saveChanges = true)
         {
-            // Force attach
+            // Get entry
             var entry = Context.Entry(entity);
 
-            if(entry.State == EntityState.Detached)
+            if (entry.State == EntityState.Detached)
             {
-                var oldEntity = await GetById(entity.Id, true);
-                entry = Context.Entry(oldEntity);
+                // Try get entry for local entity
+                var localEntity = Context.Set<TEntity>().Local.FirstOrDefault(x => x.Id == entity.Id);
+
+                if (localEntity != null)
+                {
+                    entry = Context.Entry(localEntity);
+                }
+                else
+                {
+                    // Get entry for database entity
+                    var databaseEntity = await GetById(entity.Id, true);
+                    entry = Context.Entry(databaseEntity);
+                }
+
+                // Update entry values
                 entry.CurrentValues.SetValues(entity);
-                entry.State = EntityState.Modified;
             }
+
+            entry.State = EntityState.Modified;
+
+            StampEntry(entry);
 
             if (saveChanges)
                 return await SaveChanges();
@@ -164,7 +211,9 @@ namespace SimpleStore.Core.Services
         public async Task<int> Delete(string id, bool soft = true)
         {
             var entity = await GetById(id, true);
-            if (entity == null) return 0;
+
+            if (entity == null) 
+                return 0;
 
             if (soft)
             {
@@ -190,9 +239,6 @@ namespace SimpleStore.Core.Services
 
         public async Task<int> SaveChanges()
         {
-            // Stamp entries
-            Stamp();
-
             var changed = await Context.SaveChangesAsync();
             return changed;
         }

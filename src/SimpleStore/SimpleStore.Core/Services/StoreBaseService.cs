@@ -55,14 +55,17 @@ namespace SimpleStore.Core.Services
 
         #endregion
 
-        #region Tracking
+        #region Stamp
 
-        protected override void Stamp(EntityEntry entry)
+        protected override void StampEntryEntity(EntityEntry entry)
         {
-            var entity = entry.Entity as StoreEntity;
+            base.StampEntryEntity(entry);
 
-            entity.StoreId = CurrentStore.Id;
-            base.Stamp(entry);
+            if (entry.Entity is StoreEntity)
+            {
+                var entity = entry.Entity as StoreEntity;
+                entity.StoreId = CurrentStore.Id;
+            }
         }
 
         #endregion

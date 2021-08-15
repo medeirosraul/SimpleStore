@@ -1,0 +1,92 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = Linux,macOS,Windows,browser
+build_property.RootNamespace = SimpleStore.Components
+build_property.RootNamespace = SimpleStore.Components
+build_property.ProjectDir = D:\Owl\source\LojaSimplificada\src\SimpleStore\SimpleStore.Components\
+build_property.RazorLangVersion = 6.0
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\Owl\source\LojaSimplificada\src\SimpleStore\SimpleStore.Components
+build_property._RazorSourceGeneratorDebug = 
+build_property._RazorSourceGeneratorHeapDumps = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Calendar/Calendar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q2FsZW5kYXJcQ2FsZW5kYXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Calendar/CalendarDay.razor]
+build_metadata.AdditionalFiles.TargetPath = Q2FsZW5kYXJcQ2FsZW5kYXJEYXkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Calendar/CalendarMonth.razor]
+build_metadata.AdditionalFiles.TargetPath = Q2FsZW5kYXJcQ2FsZW5kYXJNb250aC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Calendar/CalendarWeek.razor]
+build_metadata.AdditionalFiles.TargetPath = Q2FsZW5kYXJcQ2FsZW5kYXJXZWVrLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Form/Form.razor]
+build_metadata.AdditionalFiles.TargetPath = Rm9ybVxGb3JtLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Form/FormField.razor]
+build_metadata.AdditionalFiles.TargetPath = Rm9ybVxGb3JtRmllbGQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Form/FormInput.razor]
+build_metadata.AdditionalFiles.TargetPath = Rm9ybVxGb3JtSW5wdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Form/FormTimeRange.razor]
+build_metadata.AdditionalFiles.TargetPath = Rm9ybVxGb3JtVGltZVJhbmdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Layout/Page.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFBhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Layout/Panel.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFBhbmVsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Layout/TabContainer.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFRhYkNvbnRhaW5lci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Layout/TabContent.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFRhYkNvbnRlbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Layout/TabLink.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFRhYkxpbmsucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Notifications/Notifications.razor]
+build_metadata.AdditionalFiles.TargetPath = Tm90aWZpY2F0aW9uc1xOb3RpZmljYXRpb25zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Table/PagedTable.razor]
+build_metadata.AdditionalFiles.TargetPath = VGFibGVcUGFnZWRUYWJsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Table/Table.razor]
+build_metadata.AdditionalFiles.TargetPath = VGFibGVcVGFibGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Util/Pagination.razor]
+build_metadata.AdditionalFiles.TargetPath = VXRpbFxQYWdpbmF0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[d:/Owl/source/LojaSimplificada/src/SimpleStore/SimpleStore.Components/Component1.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50MS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-33p2syf4rv

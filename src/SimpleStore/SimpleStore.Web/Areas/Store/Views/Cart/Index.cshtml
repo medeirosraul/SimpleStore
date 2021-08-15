@@ -55,18 +55,19 @@
 						<div class="panel bg-light">
 							<h5>Estimativa de entrega</h5>
 							<form asp-controller="Cart" asp-action="EstimateShipping">
+								<input type="hidden" name="callback" value="/Cart" />
 								<div class="row">
-									<label class="col-auto col-form-label">
-										CEP
+									<label class="col-form-label">
+										Digite o CEP para calcular o frete
 									</label>
-									<div class="col input-group">
+									<div class="input-group">
 										<input type="text" class="form-control" name="zipcode" value="@Model.ShippingZipCode" />
 										<button class="btn btn-primary text-white">Calcular</button>
 									</div>
 								</div>
 							</form>
 							<form id="shipping-option-form" asp-controller="Cart" asp-action="SelectShippingOption">
-								@if (Model.ShippingOptions.Count > 0)
+								@if (Model.ShippingOptions != null && Model.ShippingOptions.Count > 0)
 								{
 									<hr/>
 									foreach(var option in Model.ShippingOptions)
@@ -78,6 +79,15 @@
 											</label>
 										</div>
 									}
+								}
+								else
+								{
+									<div class="form-check panel bg-white mt-2 d-flex align-items-center">
+										<p class="m-0">
+											<span class="text-danger">Não há fretes disponíveis no momento.</span><br/>
+											<small class="text-muted">O frete deverá ser combinado com o vendedor quando finalizar a compra.</small>
+										</p>
+									</div>
 								}
 							</form>
 						</div>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SimpleStore.Core.Entities.Customers;
 using System.Collections.Generic;
 
 namespace SimpleStore.Core.Entities.Carts
@@ -22,6 +23,8 @@ namespace SimpleStore.Core.Entities.Carts
     {
         public string CustomerId { get; set; }
         public string ShippingZipCode { get; set; }
+        public string SelectedAddress { get; set; }
+
         // Navigations
         public virtual ICollection<CartItem> Items { get; set; }
         public virtual ICollection<CartShippingOption> ShippingOptions { get; set; }

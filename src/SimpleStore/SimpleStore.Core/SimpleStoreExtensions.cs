@@ -11,6 +11,8 @@ using SimpleStore.Core.Services.Customers;
 using SimpleStore.Core.Services.MelhorEnvio;
 using SimpleStore.Core.Services.Monetaries;
 using SimpleStore.Core.Services.Orders;
+using SimpleStore.Core.Services.Payments;
+using SimpleStore.Core.Services.Payments.BankTransfer;
 using SimpleStore.Core.Services.Pictures;
 using SimpleStore.Core.Services.Products;
 using SimpleStore.Core.Services.Schedules;
@@ -59,9 +61,15 @@ namespace SimpleStore.Core
             services.AddScoped<IMonetaryService, MonetaryService>();
 
             // Shipping
+            services.AddScoped<IShippingService, ShippingService>();
             services.AddScoped<IShippingMethodServiceResolver, ShippingMethodServiceResolver>();
             services.AddScoped<IShippingMethodService, MelhorEnvioService>();
             services.AddScoped<IMelhorEnvioSettingsService, MelhorEnvioSettingsService>();
+
+            // Payment
+            services.AddScoped<IPaymentServiceResolver, PaymentServiceResolver>();
+            services.AddScoped<IPaymentService, BankTransferPaymentService>();
+            services.AddScoped<IPaymentService, MercadoPagoPaymentService>();
 
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<IPictureProvider, PictureProvider>();

@@ -4,7 +4,10 @@
 @inject NavigationManager Navigation
 <CascadingAuthenticationState>
     <CascadingValue Value="StoreContext">
-        <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+        <Router 
+            AppAssembly="@typeof(Program).Assembly" 
+            AdditionalAssemblies="new[] {typeof(SimpleStore.MercadoLivre.Areas.Admin.Pages.MercadoLivre.Index).Assembly}"
+            PreferExactMatches="@true">
             <Found Context="routeData">
                 <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
             </Found>

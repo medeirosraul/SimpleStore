@@ -246,6 +246,9 @@ namespace SimpleStore.Core.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("SelectedAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ShippingZipCode")
                         .HasColumnType("nvarchar(max)");
 

@@ -8,6 +8,7 @@ using Serilog;
 using SimpleStore.Core;
 using SimpleStore.Core.Data;
 using SimpleStore.Core.Entities.Identity;
+using SimpleStore.Web.Areas.Store.ViewModelProviders;
 using System;
 using System.Reflection;
 
@@ -56,10 +57,8 @@ namespace SimpleStore.Web
             services.AddServerSideBlazor();
             services.AddControllersWithViews();
 
-            // Tests
-            var types = Assembly.GetEntryAssembly().GetTypes();
-
-            Console.WriteLine("");
+            // Viewmodel Providers
+            services.AddScoped<ICartViewModelProvider, CartViewModelProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

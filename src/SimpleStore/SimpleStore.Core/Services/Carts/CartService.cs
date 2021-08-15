@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleStore.Core.Data;
 using SimpleStore.Core.Entities.Carts;
+using SimpleStore.Core.Entities.Shipping;
 using SimpleStore.Core.Services.Catalog;
+using SimpleStore.Core.Services.Shipping;
 using SimpleStore.Framework.Contexts;
 using System;
 using System.Collections;
@@ -15,34 +17,50 @@ namespace SimpleStore.Core.Services.Carts
     {
         Task<Cart> GetByCustomerId(string customerId, bool tracking = false);
 
-        Task AddCartItem(string cartId, string itemId, int quantity);
-        Task RemoveCartItem(string cartId, string itemId, int quantity);
+        Task AddCartItem(Cart cart, string itemId, int quantity);
+
+        Task RemoveCartItem(Cart cart, string itemId, int quantity);
+
+        Task UpdateSelectedShippingAddress(string cartId, string addressId);
+
+        Task<ICollection<ShippingOption>> CalculateShippingOptions(string cartId, string zipcode);
 
         Task UpdateShippingOptions(string cartId, ICollection<CartShippingOption> options);
 
-        Task UpdateSelectedShippingOption(string cartId, string optionId);
+        Task UpdateSelectedShippingOption(Cart cart, string optionId);
 
         Task ClearShippingOptions(string cartId);
     }
 
     public class CartService : StoreBaseService<Cart>, ICartService
     {
+        private readonly ICustomerContext _customerContext;
         private readonly IStoreBaseService<CartItem>  _cartItemService;
         private readonly IStoreBaseService<CartShippingOption> _cartShippingOptionService;
 
         private readonly ICatalogProductService _catalogItemService;
+        private readonly IShippingService _shippingService;
 
-        public CartService(StoreDbContext context, IStoreContext storeContext, IStoreBaseService<CartItem> cartItemService, ICatalogProductService catalogItemService, IStoreBaseService<CartShippingOption> cartShippingOptionService) : base(context, storeContext)
+        public CartService(StoreDbContext context,
+            IStoreContext storeContext,
+            IStoreBaseService<CartItem> cartItemService,
+            ICatalogProductService catalogItemService,
+            IStoreBaseService<CartShippingOption> cartShippingOptionService,
+            IShippingService shippingService, 
+            ICustomerContext customerContext) : base(context, storeContext)
         {
             _cartItemService = cartItemService;
             _catalogItemService = catalogItemService;
             _cartShippingOptionService = cartShippingOptionService;
+            _shippingService = shippingService;
+            _customerContext = customerContext;
         }
 
         public override async Task<Cart> GetById(string id, bool tracking = false)
         {
             var query = PrepareQuery();
-            query = query.Include(x => x.Items.Where(y => !y.Deleted));
+            query = query.Include(x => x.Items.Where(y => !y.Deleted))
+                .ThenInclude(x => x.CatalogItem);
             query = query.Include(x => x.ShippingOptions);
 
             return await query.FirstOrDefaultAsync(x => x.Id == id);
@@ -73,11 +91,8 @@ namespace SimpleStore.Core.Services.Carts
             return cart;
         }
 
-        public async Task AddCartItem(string cartId, string itemId, int quantity)
+        public async Task AddCartItem(Cart cart, string itemId, int quantity)
         {
-            // Get cart
-            var cart = await GetById(cartId);
-
             // Get catalog item
             var item = await _catalogItemService.GetById(itemId);
 
@@ -101,17 +116,17 @@ namespace SimpleStore.Core.Services.Carts
 
             // Insert or Update Cart Item
             await _cartItemService.InsertOrUpdate(cartItem);
+            cart.Items ??= new List<CartItem>();
+
+            cart.Items.Add(cartItem);
         }
 
-        public async Task RemoveCartItem(string cartId, string itemId, int quantity)
+        public async Task RemoveCartItem(Cart cart, string itemId, int quantity)
         {
-            // Get Cart
-            var cart = await GetById(cartId);
-
             // Get Cart Item
             var item = cart.Items?.FirstOrDefault(x => x.CatalogItemId == itemId);
 
-            // If doesn't exists, return
+            // If doesn't exist, return
             if (item == null)
                 return;
 
@@ -119,6 +134,22 @@ namespace SimpleStore.Core.Services.Carts
             item.Deleted = true;
 
             await _cartItemService.Update(item);
+
+            cart.Items.Remove(item);
+        }
+
+        public async Task UpdateSelectedShippingAddress(string cartId, string addressId)
+        {
+            var customer = _customerContext.CurrentCustomer;
+            var cart = await GetById(cartId);
+            var address = customer.Addresses.First(x => x.Id == addressId);
+
+            if (address == null)
+                throw new Exception("Address doesn't exists.");
+
+            cart.SelectedAddress = address.Id;
+            await Update(cart);
+            await CalculateShippingOptions(cart.Id, address.ZipCode);
         }
 
         public async Task UpdateShippingOptions(string cartId, ICollection<CartShippingOption> options)
@@ -141,11 +172,8 @@ namespace SimpleStore.Core.Services.Carts
             await _cartShippingOptionService.Insert(options);
         }
 
-        public async Task UpdateSelectedShippingOption(string cartId, string optionId)
+        public async Task UpdateSelectedShippingOption(Cart cart, string optionId)
         {
-            // Get cart
-            var cart = await GetById(cartId);
-
             // Get last selected option
             var lastSelectedOption = cart.ShippingOptions?.FirstOrDefault(x => x.Selected);
 
@@ -178,6 +206,39 @@ namespace SimpleStore.Core.Services.Carts
 
             if (cart.ShippingOptions != null && cart.ShippingOptions.Count > 0)
                 await _cartShippingOptionService.Delete(cart.ShippingOptions);
+        }
+
+        public async Task<ICollection<ShippingOption>> CalculateShippingOptions(string cartId, string zipcode)
+        {
+            // Get cart
+            var cart = await GetById(cartId);
+            cart.ShippingZipCode = zipcode;
+
+            await Update(cart);
+            await ClearShippingOptions(cart.Id);
+
+            var options = await _shippingService.CalculateOptions(cart, zipcode);
+
+            if (options != null && options.Count > 0)
+            {
+                var cartShippingOptions = new List<CartShippingOption>();
+                foreach (var option in options)
+                {
+                    cartShippingOptions.Add(new CartShippingOption
+                    {
+                        Name = option.Name,
+                        Description = option.Description,
+                        Value = option.Value,
+                        Method = "MelhorEnvio"
+                    });
+                }
+
+                // Pre-select minor value
+                cartShippingOptions.First().Selected = true;
+                await UpdateShippingOptions(cart.Id, cartShippingOptions);
+            }
+
+            return options;
         }
     }
 }

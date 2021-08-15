@@ -58,6 +58,10 @@ namespace SimpleStore.Core.Services.MelhorEnvio
             }
 
             var result = await PostRequest("/api/v2/me/shipment/calculate", shipment);
+
+            if (string.IsNullOrWhiteSpace(result))
+                return options;
+
             var resultObject = JObject.Parse("{ \"result\": " + result + "}");
             var shippingOptionsList = resultObject["result"].Children();
 
