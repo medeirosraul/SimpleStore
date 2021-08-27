@@ -3,10 +3,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SimpleStore.Core.Data;
 using SimpleStore.Entities;
 using SimpleStore.Framework.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services
 {

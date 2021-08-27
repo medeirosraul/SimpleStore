@@ -5,11 +5,6 @@ using SimpleStore.Core.Entities.Shipping;
 using SimpleStore.Core.Services.Catalog;
 using SimpleStore.Core.Services.Shipping;
 using SimpleStore.Framework.Contexts;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services.Carts
 {
@@ -21,7 +16,7 @@ namespace SimpleStore.Core.Services.Carts
 
         Task RemoveCartItem(Cart cart, string itemId, int quantity);
 
-        Task UpdateSelectedShippingAddress(string cartId, string addressId);
+        Task ClearCart(Cart cart);
 
         Task<ICollection<ShippingOption>> CalculateShippingOptions(string cartId, string zipcode);
 
@@ -29,13 +24,15 @@ namespace SimpleStore.Core.Services.Carts
 
         Task UpdateSelectedShippingOption(Cart cart, string optionId);
 
+        Task UpdateSelectedPaymentMethod(Cart cart, string identificator);
+
         Task ClearShippingOptions(string cartId);
     }
 
     public class CartService : StoreBaseService<Cart>, ICartService
     {
         private readonly ICustomerContext _customerContext;
-        private readonly IStoreBaseService<CartItem>  _cartItemService;
+        private readonly IStoreBaseService<CartItem> _cartItemService;
         private readonly IStoreBaseService<CartShippingOption> _cartShippingOptionService;
 
         private readonly ICatalogProductService _catalogItemService;
@@ -46,7 +43,7 @@ namespace SimpleStore.Core.Services.Carts
             IStoreBaseService<CartItem> cartItemService,
             ICatalogProductService catalogItemService,
             IStoreBaseService<CartShippingOption> cartShippingOptionService,
-            IShippingService shippingService, 
+            IShippingService shippingService,
             ICustomerContext customerContext) : base(context, storeContext)
         {
             _cartItemService = cartItemService;
@@ -138,18 +135,9 @@ namespace SimpleStore.Core.Services.Carts
             cart.Items.Remove(item);
         }
 
-        public async Task UpdateSelectedShippingAddress(string cartId, string addressId)
+        public async Task ClearCart(Cart cart)
         {
-            var customer = _customerContext.CurrentCustomer;
-            var cart = await GetById(cartId);
-            var address = customer.Addresses.First(x => x.Id == addressId);
-
-            if (address == null)
-                throw new Exception("Address doesn't exists.");
-
-            cart.SelectedAddress = address.Id;
-            await Update(cart);
-            await CalculateShippingOptions(cart.Id, address.ZipCode);
+            await _cartItemService.Delete(cart.Items);
         }
 
         public async Task UpdateShippingOptions(string cartId, ICollection<CartShippingOption> options)
@@ -240,5 +228,12 @@ namespace SimpleStore.Core.Services.Carts
 
             return options;
         }
+
+        public Task UpdateSelectedPaymentMethod(Cart cart, string identificator)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

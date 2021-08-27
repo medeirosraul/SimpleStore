@@ -1,0 +1,69 @@
+﻿@using SimpleStore.Web.Areas.Store.ViewModels.Cart
+@model CartViewModel
+
+<div class="row mt-3">
+	<div class="col-12 col-md-6 col-xl-8">
+		<div class="panel bg-light mt-2">
+			<p>Itens comprados: </p>
+			@foreach (var item in Model.Items)
+			{
+				<div class="row">
+					<div class="cart-item col-12">
+						<div class="panel bg-white d-flex">
+							<div class="picture">
+								<div class="square-box">
+									<div class="square-content">
+										<img src="@item.CatalogItem.Picture" />
+									</div>
+								</div>
+							</div>
+							<div class="cart-item-details ps-2">
+								<h5>
+									@item.CatalogItem.Name
+								</h5>
+								<p>@item.Quantity x <span class="price">@item.CatalogItem.PriceString</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="col-12 col-md-6 col-xl-4">
+		<div class="panel bg-light mt-2">
+			<h5>Resumo</h5>
+			<div class="row">
+				<div class="col-6">
+					<span>Subtotal</span>
+				</div>
+				<div class="col-6 d-flex justify-content-end">
+					<span>@Model.SubtotalString</span>
+				</div>
+			</div>
+			<hr />
+			<div class="row">
+				<div class="col-6">
+					<span>Frete</span>
+				</div>
+				<div class="col-6 d-flex justify-content-end">
+					<span>@Model.ShippingValueString</span>
+				</div>
+			</div>
+			<hr />
+			<div class="row">
+				<div class="col">
+					<div class="panel bg-white">
+						<div class="row">
+							<div class="col-6">
+								<span>Total</span>
+							</div>
+							<div class="col-6 d-flex justify-content-end">
+								<span>@Model.TotalString</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

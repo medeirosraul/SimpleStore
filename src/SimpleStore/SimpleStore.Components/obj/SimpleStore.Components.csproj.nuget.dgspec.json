@@ -50,7 +50,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.Components.Web": {
               "target": "Package",
-              "version": "[6.0.0-preview.6.21355.2, )"
+              "version": "[6.0.0-preview.7.21378.6, )"
             }
           },
           "imports": [
@@ -118,15 +118,15 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.5, )"
+              "version": "[6.0.0-preview.7.21378.6, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.1, )"
+              "version": "[6.0.0-preview.7.21378.4, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.1, )"
+              "version": "[6.0.0-preview.7.21378.4, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -198,7 +198,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.5, )"
+              "version": "[6.0.0-preview.7.21378.6, )"
             },
             "Microsoft.AspNetCore.Identity": {
               "target": "Package",
@@ -206,17 +206,17 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.5, )"
+              "version": "[6.0.0-preview.7.21378.6, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.1, )"
+              "version": "[6.0.0-preview.7.21378.4, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[6.0.0-preview.4.21253.1, )"
+              "version": "[6.0.0-preview.7.21378.4, )"
             }
           },
           "imports": [

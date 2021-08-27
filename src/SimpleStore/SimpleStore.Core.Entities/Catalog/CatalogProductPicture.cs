@@ -14,7 +14,7 @@ namespace SimpleStore.Core.Entities.Catalog
                 .HasForeignKey<CatalogProductPicture>(x => x.PictureId);
         }
     }
-    public class CatalogProductPicture: StoreEntity
+    public class CatalogProductPicture : StoreEntity
     {
         public int Order { get; set; }
         public bool Main { get; set; }
@@ -23,6 +23,5 @@ namespace SimpleStore.Core.Entities.Catalog
 
         // Navigation
         public virtual Picture Picture { get; set; }
-        public virtual CatalogProduct Product { get; set; }
     }
 }

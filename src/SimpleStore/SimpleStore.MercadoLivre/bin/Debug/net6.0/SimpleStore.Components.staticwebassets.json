@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "Hash": "bXBumlh50KaB0X57xhzpIQkVGG6gZFugjU0CRKEKGlw=",
+  "Source": "SimpleStore.Components",
+  "BasePath": "_content/SimpleStore.Components",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "RelatedManifests": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "SimpleStore.Components\\wwwroot",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SimpleStore.Components.styles.css",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Computed",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "SimpleStore.Components.styles.css",
+      "AssetKind": "All",
+      "AssetMode": "CurrentProject",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ApplicationBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SimpleStore.Components.styles.css"
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SimpleStore.Components.bundle.scp.css",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Computed",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "SimpleStore.Components.bundle.scp.css",
+      "AssetKind": "All",
+      "AssetMode": "Reference",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ProjectBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SimpleStore.Components.bundle.scp.css"
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\background.png",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "background.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\background.png"
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\exampleJsInterop.js",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "exampleJsInterop.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\exampleJsInterop.js"
+    }
+  ]
+}

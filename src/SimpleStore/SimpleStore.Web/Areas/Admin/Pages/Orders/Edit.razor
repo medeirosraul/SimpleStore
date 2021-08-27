@@ -1,0 +1,50 @@
+﻿@page "/Admin/Orders/{Id}"
+@using SimpleStore.Core.Entities.Orders
+@using SimpleStore.Core.Services.Orders
+@using SimpleStore.Core.Services.Monetaries
+@using SimpleStore.Framework.Types
+@inject NavigationManager Navigation
+@inject IOrderService OrderService
+@inject IMonetaryService MonetaryService
+
+<Page>
+    <Panel Title="Pedido">
+        <HeaderActions>
+            <button class="btn btn-primary me-2" type="submit" form="product-form" @onclick:stopPropagation @onclick="@(() => _continueEdit = false)">
+                <span class="iconify" data-icon="fluent:save-20-filled" data-width="20" data-height="20"></span>
+                Salvar
+            </button>
+            <button class="btn btn-secondary" type="submit" form="product-form" @onclick:stopPropagation @onclick="@(() => _continueEdit = true)">
+                <span class="iconify" data-icon="fluent:save-edit-20-filled" data-width="20" data-height="20"></span>
+                Salvar e cotinuar editando
+            </button>
+        </HeaderActions>
+        <Content>
+            <OrderForm Id="@Id"></OrderForm>
+        </Content>
+    </Panel>
+</Page>
+
+@code { 
+    private bool _continueEdit = false;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    public Order Order { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Id))
+            Navigation.NavigateTo("/Admin/Orders");
+            
+        Order = await OrderService.GetById(Id, true, true);
+    }
+
+    protected void SuccessSubmited()
+    {
+        if(_continueEdit) return;
+
+        Navigation.NavigateTo("/Admin/Orders");
+    }
+}

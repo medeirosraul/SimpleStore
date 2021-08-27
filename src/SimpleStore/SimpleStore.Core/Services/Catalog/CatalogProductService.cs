@@ -2,8 +2,6 @@
 using SimpleStore.Core.Data;
 using SimpleStore.Core.Entities.Catalog;
 using SimpleStore.Framework.Contexts;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Services.Catalog
 {
@@ -11,6 +9,8 @@ namespace SimpleStore.Core.Services.Catalog
     {
         Task<int> InsertPicture(CatalogProductPicture picture);
         Task<int> DeletePicture(string id);
+
+        Task UpdateProductStock(CatalogProduct product, int quantity);
     }
 
     public class CatalogProductService : StoreBaseService<CatalogProduct>, ICatalogProductService
@@ -19,7 +19,7 @@ namespace SimpleStore.Core.Services.Catalog
 
         public CatalogProductService(
             StoreDbContext context,
-            IStoreContext storeContext, 
+            IStoreContext storeContext,
             IStoreBaseService<CatalogProductPicture> productPictureService) : base(context, storeContext)
         {
             _productPictureService = productPictureService;
@@ -55,6 +55,12 @@ namespace SimpleStore.Core.Services.Catalog
         public Task<int> DeletePicture(string id)
         {
             return _productPictureService.Delete(id);
+        }
+
+        public async Task UpdateProductStock(CatalogProduct product, int quantity)
+        {
+            product.StockQuantity += quantity;
+            await Update(product);
         }
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SimpleStore.Web.Areas.Store.ViewModels.MyAccount
 {
     public class CustomerAddressViewModel
     {
         public string Id { get; set; }
+        public bool IsShippingAddress { get; set; }
 
         [Required]
         public string Responsible { get; set; }

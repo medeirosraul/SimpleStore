@@ -2,7 +2,7 @@
 @model CheckoutViewModel
 @{
 	ViewData["Title"] = "Finalização da compra";
-	var selectedAddress = Model.CustomerAddresses.FirstOrDefault(x => x.Id == Model.Cart.SelectedAddress);
+	var selectedAddress = Model.CustomerAddresses.FirstOrDefault(x => x.IsShippingAddress);
 }
 
 <div class="row">

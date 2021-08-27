@@ -11,9 +11,10 @@ namespace SimpleStore.Core.Entities.Customers
         }
     }
 
-    public class CustomerAddress: StoreEntity
+    public class CustomerAddress : StoreEntity
     {
         public string CustomerId { get; set; }
+        public bool IsShippingAddress { get; set; }
 
         public string Responsible { get; set; }
         public string ZipCode { get; set; }

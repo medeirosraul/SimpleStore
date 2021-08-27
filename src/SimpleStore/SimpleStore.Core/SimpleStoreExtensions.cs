@@ -23,7 +23,6 @@ using SimpleStore.Framework.Contexts;
 using SimpleStore.Framework.Helpers;
 using SimpleStore.Framework.Identity;
 using SimpleStore.Framework.Repositories;
-using System;
 
 namespace SimpleStore.Core
 {
@@ -48,6 +47,7 @@ namespace SimpleStore.Core
             // Services
             services.AddScoped<SubscriptionService>();
             services.AddScoped<StoreService>();
+
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICustomerAddressService, CustomerAddressService>();
 
@@ -56,6 +56,8 @@ namespace SimpleStore.Core
 
             services.AddScoped<ICartService, CartService>();
 
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderProcessingService, OrderProcessingService>();
             services.AddScoped<IOrderCalculationService, OrderCalculationService>();
 
             services.AddScoped<IMonetaryService, MonetaryService>();
@@ -68,8 +70,8 @@ namespace SimpleStore.Core
 
             // Payment
             services.AddScoped<IPaymentServiceResolver, PaymentServiceResolver>();
-            services.AddScoped<IPaymentService, BankTransferPaymentService>();
-            services.AddScoped<IPaymentService, MercadoPagoPaymentService>();
+            services.AddScoped<IPaymentMethod, BankTransferPaymentMethod>();
+            // services.AddScoped<IPaymentService, MercadoPagoPaymentService>();
 
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<IPictureProvider, PictureProvider>();

@@ -16,7 +16,7 @@ namespace SimpleStore.Components.Notifications
 
     public class Notification: IDisposable
     {
-        private Timer _countdown;
+        private System.Timers.Timer _countdown;
 
         public event Action<Notification> OnHide;
 
@@ -26,7 +26,7 @@ namespace SimpleStore.Components.Notifications
 
         public void StartCountdown(int milliseconds)
         {
-            _countdown ??= new Timer(milliseconds);
+            _countdown ??= new System.Timers.Timer(milliseconds);
 
             if (_countdown.Enabled)
                 _countdown.Stop();

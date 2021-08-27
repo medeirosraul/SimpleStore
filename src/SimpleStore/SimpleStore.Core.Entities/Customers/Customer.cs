@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleStore.Core.Entities.Carts;
-using System;
-using System.Collections.Generic;
-using System.Security.Permissions;
 
 namespace SimpleStore.Core.Entities.Customers
 {
@@ -29,6 +26,9 @@ namespace SimpleStore.Core.Entities.Customers
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string DocumentNumber { get; set; }
+
+        // Payment
+        public string SelectedPaymentMethod { get; set; }
 
         // Navigation
         public virtual Cart Cart { get; set; }

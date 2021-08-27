@@ -2,6 +2,7 @@
 using SimpleStore.Core.Entities.Customers;
 using SimpleStore.Core.Services.Carts;
 using SimpleStore.Core.Services.Customers;
+using SimpleStore.Core.Services.Orders;
 using SimpleStore.Core.Services.Payments;
 using SimpleStore.Core.Services.Shipping;
 using SimpleStore.Framework.Contexts;
@@ -9,9 +10,6 @@ using SimpleStore.Web.Areas.Store.ViewModelProviders;
 using SimpleStore.Web.Areas.Store.ViewModels.Checkout;
 using SimpleStore.Web.Areas.Store.ViewModels.MyAccount;
 using SimpleStore.Web.Areas.Store.ViewModels.Payment;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleStore.Web.Areas.Store.Controllers
 {
@@ -24,14 +22,16 @@ namespace SimpleStore.Web.Areas.Store.Controllers
         private readonly ICartViewModelProvider _cartViewModelProvider;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
         private readonly IShippingService _shippingService;
+        private readonly IOrderProcessingService _orderProcessingService;
 
         public CheckoutController(
             ICartViewModelProvider cartViewModelProvider,
             ICustomerContext customerContext,
             ICartService cartService,
             IPaymentServiceResolver paymentServiceResolver,
-            IShippingService shippingService, 
-            ICustomerAddressService customerAddressService)
+            IShippingService shippingService,
+            ICustomerAddressService customerAddressService,
+            IOrderProcessingService orderProcessingService)
         {
             _cartViewModelProvider = cartViewModelProvider;
             _customerContext = customerContext;
@@ -39,6 +39,7 @@ namespace SimpleStore.Web.Areas.Store.Controllers
             _paymentServiceResolver = paymentServiceResolver;
             _shippingService = shippingService;
             _customerAddressService = customerAddressService;
+            _orderProcessingService = orderProcessingService;
         }
 
         public IActionResult Index()
@@ -50,7 +51,7 @@ namespace SimpleStore.Web.Areas.Store.Controllers
         [HttpGet]
         public async Task<IActionResult> ShippingAddress()
         {
-            var viewmodel = await CreateCheckoutViewModel();
+            var viewmodel = await CreateCheckoutModel();
             return View(viewmodel);
         }
 
@@ -60,9 +61,8 @@ namespace SimpleStore.Web.Areas.Store.Controllers
         {
             var customer = _customerContext.CurrentCustomer;
             var cart = await _cartService.GetByCustomerId(_customerContext.CurrentCustomer.Id);
-            var viewModel = await CreateCheckoutViewModel();
-
-            viewModel.NewAddress = newAddress;
+            var model = await CreateCheckoutModel();
+            model.NewAddress = newAddress;
 
             // If existent address
             if (!string.IsNullOrEmpty(addressId))
@@ -75,13 +75,15 @@ namespace SimpleStore.Web.Areas.Store.Controllers
                     return RedirectToAction(nameof(ShippingAddress));
                 }
 
-                await _cartService.UpdateSelectedShippingAddress(cart.Id, existingAddress.Id);
+                await _customerContext.UpdateShippingAddress(addressId);
+                await _cartService.ClearShippingOptions(cart.Id);
+
                 return RedirectToAction(nameof(ShippingMethod));
             }
 
             // If new address
             if (!ModelState.IsValid)
-                return View(viewModel);
+                return View(model);
 
             var address = new CustomerAddress
             {
@@ -101,10 +103,11 @@ namespace SimpleStore.Web.Areas.Store.Controllers
             if (count <= 0)
             {
                 ModelState.AddModelError("Error", "Erro ao adicionar novo endereço. Tente novamente.");
-                View();
+                View(model);
             }
 
-            await _cartService.UpdateSelectedShippingAddress(cart.Id, address.Id);
+            await _customerContext.UpdateShippingAddress(address.Id);
+            await _cartService.ClearShippingOptions(cart.Id);
 
             return RedirectToAction(nameof(ShippingMethod));
         }
@@ -112,7 +115,16 @@ namespace SimpleStore.Web.Areas.Store.Controllers
         [HttpGet]
         public async Task<IActionResult> ShippingMethod()
         {
-            var viewmodel = await CreateCheckoutViewModel();
+            var customer = _customerContext.CurrentCustomer;
+            var cart = await _cartService.GetByCustomerId(_customerContext.CurrentCustomer.Id);
+            var address = _customerContext.CurrentCustomer.Addresses.FirstOrDefault(x => x.IsShippingAddress);
+
+            if (address == null)
+                RedirectToAction(nameof(ShippingAddress));
+
+            await _cartService.CalculateShippingOptions(cart.Id, address.ZipCode);
+
+            var viewmodel = await CreateCheckoutModel();
             return View(viewmodel);
         }
 
@@ -122,24 +134,48 @@ namespace SimpleStore.Web.Areas.Store.Controllers
             var cart = await _cartService.GetByCustomerId(_customerContext.CurrentCustomer.Id);
             await _cartService.UpdateSelectedShippingOption(cart, shippingOption);
 
-            return RedirectToAction(nameof(PaymentMethod));
+            return RedirectToAction(nameof(Confirmation));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Confirmation()
+        {
+            var model = await CreateCheckoutModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Confirmation(bool confirm)
+        {
+            if (!confirm)
+                return RedirectToAction(nameof(Confirmation));
+
+            var customer = _customerContext.CurrentCustomer;
+            var cart = await _cartService.GetByCustomerId(customer.Id);
+
+            var placeOrderResult = await _orderProcessingService.PlaceOrder(customer, cart);
+
+            if (placeOrderResult.Succeeded)
+                await _cartService.ClearCart(cart);
+
+            return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> PaymentMethod()
         {
-            var viewmodel = await CreateCheckoutViewModel();
+            var viewmodel = await CreateCheckoutModel();
             return View(viewmodel);
         }
 
         [HttpPost]
         public async Task<IActionResult> PaymentMethod(string paymentMethod)
         {
-            var viewmodel = await CreateCheckoutViewModel();
+            var viewmodel = await CreateCheckoutModel();
             return View(viewmodel);
         }
 
-        private async Task<CheckoutViewModel> CreateCheckoutViewModel()
+        private async Task<CheckoutViewModel> CreateCheckoutModel()
         {
             var customer = _customerContext.CurrentCustomer;
             var cart = await _cartService.GetByCustomerId(_customerContext.CurrentCustomer.Id);
@@ -160,6 +196,7 @@ namespace SimpleStore.Web.Areas.Store.Controllers
                     var addressViewModel = new CustomerAddressViewModel
                     {
                         Id = address.Id,
+                        IsShippingAddress = address.IsShippingAddress,
                         Responsible = address.Responsible,
                         ZipCode = address.ZipCode,
                         Address = address.Address,

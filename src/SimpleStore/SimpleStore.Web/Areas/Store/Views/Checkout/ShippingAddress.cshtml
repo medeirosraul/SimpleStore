@@ -9,6 +9,9 @@
     <div class="col">
         <div class="page-panel p-2 p-lg-3">
 			<h3>Finalização da compra</h3>
+
+			@await Html.PartialAsync("_CartSummary", Model.Cart)
+
 			<div class="row">
 				<div class="col">
 					<h5 class="checkout-title">Endereço para entrega</h5>
@@ -20,7 +23,7 @@
 								foreach(var address in Model.CustomerAddresses)
 								{
 									var selected = false;
-									if (Model.NewAddress == null && address.Id == Model.Cart.SelectedAddress)
+									if (Model.NewAddress == null && address.IsShippingAddress)
 									{
 										selected = true;
 									}
@@ -139,15 +142,16 @@
 					<h5 class="checkout-title-disabled">Forma de envio</h5>
 				</div>
 			</div>
-			<div class="row">
+
+			@*<div class="row">
 				<div class="col">
 					<h5 class="checkout-title-disabled">Forma de Pagamento</h5>
 				</div>
-			</div>
+			</div>*@
 
 			<div class="row">
 				<div class="col">
-					<h5 class="checkout-title-disabled">Resumo e Finalização</h5>
+					<h5 class="checkout-title-disabled">Confirmação e Pagamento</h5>
 				</div>
 			</div>
         </div>

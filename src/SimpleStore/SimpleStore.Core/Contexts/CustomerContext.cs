@@ -2,11 +2,8 @@
 using Serilog;
 using SimpleStore.Core.Entities.Customers;
 using SimpleStore.Core.Services.Customers;
-using SimpleStore.Core.Services.Products;
 using SimpleStore.Framework.Contexts;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SimpleStore.Core.Contexts
 {
@@ -15,15 +12,15 @@ namespace SimpleStore.Core.Contexts
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStoreContext _storeContext;
         private readonly ICustomerService _customerService;
-        private Customer _currentCustomer;
 
+        private Customer _currentCustomer;
         public Customer CurrentCustomer => _currentCustomer;
 
-        public CustomerContext(IHttpContextAccessor httpContextAccessor, ICustomerService customerService, IStoreContext storeContext)
+        public CustomerContext(IHttpContextAccessor httpContextAccessor, IStoreContext storeContext, ICustomerService customerService)
         {
             _httpContextAccessor = httpContextAccessor;
-            _customerService = customerService;
             _storeContext = storeContext;
+            _customerService = customerService;
 
             Task.Run(async () => await SetCurrentCustomer()).Wait();
         }
@@ -91,6 +88,16 @@ namespace SimpleStore.Core.Contexts
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append($".SimpleStore.Customer", customer.Id, cookieOptions);
+        }
+
+        public Task UpdateShippingAddress(string addressId)
+        {
+            return _customerService.UpdateShippingAddress(CurrentCustomer, addressId);
+        }
+
+        public Task UpdatePaymentMethod(string paymentMethodIdentificator)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Collections.Generic;
 
 namespace SimpleStore.Core.Entities.Catalog
 {
@@ -11,12 +10,12 @@ namespace SimpleStore.Core.Entities.Catalog
             builder.ToTable("CatalogProducts");
             builder.Property(x => x.Name).IsRequired();
             builder.HasMany(x => x.Pictures)
-                .WithOne(x => x.Product)
+                .WithOne()
                 .HasForeignKey(x => x.ProductId);
         }
     }
 
-    public class CatalogProduct: StoreEntity
+    public class CatalogProduct : StoreEntity
     {
         public bool Published { get; set; }
         public string Name { get; set; }

@@ -1,5 +1,5 @@
 ﻿<StaticWebAssets Version="1.0">
-  <ContentRoot BasePath="/" Path="D:\Owl\source\LojaSimplificada\src\SimpleStore\SimpleStore.MercadoLivre\obj\Debug\net6.0\scopedcss\bundle\" />
   <ContentRoot BasePath="_content/SimpleStore.Components" Path="D:\Owl\source\LojaSimplificada\src\SimpleStore\SimpleStore.Components\obj\Debug\net6.0\scopedcss\projectbundle\" />
   <ContentRoot BasePath="_content/SimpleStore.Components" Path="D:\Owl\source\LojaSimplificada\src\SimpleStore\SimpleStore.Components\wwwroot\" />
+  <ContentRoot BasePath="_content/SimpleStore.MercadoLivre" Path="D:\Owl\source\LojaSimplificada\src\SimpleStore\SimpleStore.MercadoLivre\obj\Debug\net6.0\scopedcss\bundle\" />
 </StaticWebAssets>

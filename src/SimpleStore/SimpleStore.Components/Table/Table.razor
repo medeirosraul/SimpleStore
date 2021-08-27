@@ -2,12 +2,22 @@
 @typeparam TModel
 
 <table class="table table-hover">
-    @if (Head != null)
+    @if(!string.IsNullOrEmpty(Title) || Head != null)
     {
-        <thead>
-            @Head
+        <thead class="table-dark">
+            @if (!string.IsNullOrEmpty(Title))
+            {
+                <tr>
+                    <th colspan="100"><h4>@Title</h4></th>
+				</tr>
+            }
+            @if (Head != null)
+            {
+                    @Head
+            }
         </thead>
     }
+    
     @if (Context != null && Context.Count > 0)
     {
         <tbody>
@@ -20,8 +30,15 @@
     else
     {
         <tr>
-            <td colspan="100">
-                Não há itens nesta lista.
+            <td colspan="100" class="text-muted">
+                @if (string.IsNullOrEmpty(EmptyMessage))
+                {
+                    <p>Não há itens nessa lista.</p>
+                }
+                else
+                {
+                    <p>@EmptyMessage</p>
+                }
             </td>
         </tr>
     }
@@ -30,6 +47,12 @@
 @code {
     [Parameter]
     public ICollection<TModel> Context { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string EmptyMessage { get; set; }
 
     [Parameter]
     public RenderFragment Head { get; set; }

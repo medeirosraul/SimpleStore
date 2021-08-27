@@ -1,0 +1,108 @@
+{
+  "Version": 1,
+  "Hash": "F8XqnhqptrA3ULq5PgIilf/FKT5l/30B5DfJVv/s1Qo=",
+  "Source": "SimpleStore.MercadoLivre",
+  "BasePath": "_content/SimpleStore.MercadoLivre",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "RelatedManifests": [
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\StaticWebAssets.build.json",
+      "Source": "SimpleStore.Components",
+      "ManifestType": "Build",
+      "ProjectFile": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\SimpleStore.Components.csproj",
+      "PublishTarget": "",
+      "AdditionalPublishProperties": ";Configuration=Debug;Platform=AnyCPU;",
+      "AdditionalPublishPropertiesToRemove": ";",
+      "Hash": "bXBumlh50KaB0X57xhzpIQkVGG6gZFugjU0CRKEKGlw="
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\StaticWebAssets.publish.json",
+      "Source": "SimpleStore.Components",
+      "ManifestType": "Publish",
+      "ProjectFile": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\SimpleStore.Components.csproj",
+      "PublishTarget": "ComputeReferencedStaticWebAssetsPublishManifest",
+      "AdditionalPublishProperties": ";Configuration=Debug;Platform=AnyCPU;",
+      "AdditionalPublishPropertiesToRemove": ";",
+      "Hash": ""
+    }
+  ],
+  "DiscoveryPatterns": [
+    {
+      "Name": "SimpleStore.Components\\wwwroot",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SimpleStore.Components.bundle.scp.css",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Project",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "SimpleStore.Components.bundle.scp.css",
+      "AssetKind": "All",
+      "AssetMode": "Reference",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ProjectBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SimpleStore.Components.bundle.scp.css"
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\background.png",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Project",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "background.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\background.png"
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\exampleJsInterop.js",
+      "SourceId": "SimpleStore.Components",
+      "SourceType": "Project",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+      "BasePath": "_content/SimpleStore.Components",
+      "RelativePath": "exampleJsInterop.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\exampleJsInterop.js"
+    },
+    {
+      "Identity": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.MercadoLivre\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SimpleStore.MercadoLivre.styles.css",
+      "SourceId": "SimpleStore.MercadoLivre",
+      "SourceType": "Computed",
+      "ContentRoot": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.MercadoLivre\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
+      "BasePath": "_content/SimpleStore.MercadoLivre",
+      "RelativePath": "SimpleStore.MercadoLivre.styles.css",
+      "AssetKind": "All",
+      "AssetMode": "CurrentProject",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ApplicationBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.MercadoLivre\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SimpleStore.MercadoLivre.styles.css"
+    }
+  ]
+}

@@ -1,6 +1,4 @@
 ﻿using SimpleStore.Core.Entities.Customers;
-using SimpleStore.Core.Entities.Stores;
-using System.Threading.Tasks;
 
 namespace SimpleStore.Framework.Contexts
 {
@@ -9,5 +7,9 @@ namespace SimpleStore.Framework.Contexts
         public Customer CurrentCustomer { get; }
 
         public Task SetCurrentCustomer();
+
+        public Task UpdateShippingAddress(string addressId);
+
+        public Task UpdatePaymentMethod(string paymentMethodIdentificator);
     }
 }

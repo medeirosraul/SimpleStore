@@ -1,0 +1,99 @@
+﻿@using SimpleStore.Core.Entities.Orders
+@using SimpleStore.Core.Services.Orders
+
+@inherits OwningComponentBase
+
+@if (Model == null)
+{
+    <p>
+        Carregando...
+	</p>
+}
+else
+{
+    <Form id="product-form" Model="@Model" OnValidSubmit="@Save">
+        <TabContainer>
+            <Navigation>
+                <TabLink Target="order-info" Active>Informações do pedido</TabLink>
+            </Navigation>
+            <Content>
+                <TabContent Id="order-info" Active>
+                    <FormField @bind-Value="@Model.Id" Label="ID" InputType="ValueOnly" />
+                    <FormField @bind-Value="@Model.OrderNumber" Label="Número do pedido" InputType="ValueOnly" />
+                    <FormField @bind-Value="@Model.Status" Label="Status" InputType="ValueOnly" />
+                    <FormField @bind-Value="@Model.PaymentStatus" Label="Status do pagamento" InputType="ValueOnly" />
+                    <FormField @bind-Value="@Model.ShippingValue" Label="Valor do envio" InputType="ValueOnly" />
+                    <FormField @bind-Value="@Model.Subtotal" Label="Subtotal" InputType="ValueOnly" />
+                    <FormField @bind-Value="@Model.Total" Label="Total" InputType="ValueOnly" />
+
+                    <hr/>
+                    <Table Context="@Model.Payments" Title="Pagamentos" EmptyMessage="Nenhum pagamento para este pedido.">
+                        <Head>
+                            <tr>
+                                <th width="180">Método de pagamento</th>
+                                <th width="180">Valor</th>
+							</tr>
+						</Head>
+                        <RowTemplate>
+                            <tr>
+                                <td>@context.PaymentMethod</td>
+                                <td>@context.Value</td>
+							</tr>
+						</RowTemplate>
+					</Table>
+
+                    <hr/>
+
+                    <Table Context="@Model.Shipments" Title="Envios" EmptyMessage="Nenhum envio para este pedido.">
+                        <Head>
+                            <tr>
+                                <th width="180">Método de envio</th>
+                                <th width="180">Status</th>
+							</tr>
+						</Head>
+                        <RowTemplate>
+                            <tr>
+                                <td>@context.ShippingMethod</td>
+                                <td>@context.Status</td>
+							</tr>
+						</RowTemplate>
+					</Table>
+                </TabContent>
+            </Content>
+        </TabContainer>
+    </Form>
+}
+
+
+@code {
+    private IOrderService _orderService;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public Order Model { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessSubmit { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Services
+        _orderService = (IOrderService)ScopedServices.GetService(typeof(IOrderService));
+
+        // Model
+        await Load(Id);
+    }
+
+    public async Task Save()
+    {
+        await  _orderService.Update(Model);
+        await OnSuccessSubmit.InvokeAsync();
+    }
+
+    public async Task Load(string id)
+    {
+        Model = await _orderService.GetById(id, true, true, true, true);
+    }
+}

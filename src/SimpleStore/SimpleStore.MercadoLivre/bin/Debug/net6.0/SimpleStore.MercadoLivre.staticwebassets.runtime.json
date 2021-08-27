@@ -1,0 +1,63 @@
+{
+  "ContentRoots": [
+    "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
+    "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.Components\\wwwroot\\",
+    "D:\\Owl\\source\\LojaSimplificada\\src\\SimpleStore\\SimpleStore.MercadoLivre\\obj\\Debug\\net6.0\\scopedcss\\bundle\\"
+  ],
+  "Root": {
+    "Children": {
+      "_content": {
+        "Children": {
+          "SimpleStore.Components": {
+            "Children": {
+              "SimpleStore.Components.bundle.scp.css": {
+                "Children": null,
+                "Asset": {
+                  "ContentRootIndex": 0,
+                  "SubPath": "SimpleStore.Components.bundle.scp.css"
+                },
+                "Patterns": null
+              },
+              "background.png": {
+                "Children": null,
+                "Asset": {
+                  "ContentRootIndex": 1,
+                  "SubPath": "background.png"
+                },
+                "Patterns": null
+              },
+              "exampleJsInterop.js": {
+                "Children": null,
+                "Asset": {
+                  "ContentRootIndex": 1,
+                  "SubPath": "exampleJsInterop.js"
+                },
+                "Patterns": null
+              }
+            },
+            "Asset": null,
+            "Patterns": [
+              {
+                "ContentRootIndex": 1,
+                "Pattern": "**",
+                "Depth": 2
+              }
+            ]
+          }
+        },
+        "Asset": null,
+        "Patterns": null
+      },
+      "SimpleStore.MercadoLivre.styles.css": {
+        "Children": null,
+        "Asset": {
+          "ContentRootIndex": 2,
+          "SubPath": "SimpleStore.MercadoLivre.styles.css"
+        },
+        "Patterns": null
+      }
+    },
+    "Asset": null,
+    "Patterns": null
+  }
+}

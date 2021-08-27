@@ -9,9 +9,9 @@ namespace SimpleStore.Core.Services.Payments
 {
     public interface IPaymentServiceResolver
     {
-        IPaymentService GetByIdentificator(string identificator);
+        IPaymentMethod GetByIdentificator(string identificator);
 
-        IEnumerable<IPaymentService> GetActivePaymentMethods();
+        IEnumerable<IPaymentMethod> GetActivePaymentMethods();
     }
 
     public class PaymentServiceResolver : IPaymentServiceResolver
@@ -23,14 +23,14 @@ namespace SimpleStore.Core.Services.Payments
             _serviceProvider = serviceProvider;
         }
 
-        public IPaymentService GetByIdentificator(string identificator)
+        public IPaymentMethod GetByIdentificator(string identificator)
         {
-            return _serviceProvider.GetServices<IPaymentService>()?.SingleOrDefault(x => x.Identificator == identificator);
+            return _serviceProvider.GetServices<IPaymentMethod>()?.SingleOrDefault(x => x.Identificator == identificator);
         }
 
-        public IEnumerable<IPaymentService> GetActivePaymentMethods()
+        public IEnumerable<IPaymentMethod> GetActivePaymentMethods()
         {
-            return _serviceProvider.GetServices<IPaymentService>();
+            return _serviceProvider.GetServices<IPaymentMethod>();
         }
     }
 }

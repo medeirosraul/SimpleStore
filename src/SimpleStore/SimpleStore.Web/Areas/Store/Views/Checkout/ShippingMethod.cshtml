@@ -2,13 +2,16 @@
 @model CheckoutViewModel
 @{
 	ViewData["Title"] = "Finalização da compra";
-	var selectedAddress = Model.CustomerAddresses.FirstOrDefault(x => x.Id == Model.Cart.SelectedAddress);
+	var selectedAddress = Model.CustomerAddresses.FirstOrDefault(x => x.IsShippingAddress);
 }
 
 <div class="row">
     <div class="col">
         <div class="page-panel p-2 p-lg-3">
 			<h3>Finalização da compra</h3>
+
+			@await Html.PartialAsync("_CartSummary", Model.Cart)
+
 			<div class="row">
 				<div class="col">
 					<a href="/Checkout/ShippingAddress">
@@ -77,15 +80,16 @@
 					</form>
 				</div>
 			</div>
-			<div class="row">
+
+			@*<div class="row">
 				<div class="col">
 					<h5 class="checkout-title-disabled">Forma de Pagamento</h5>
 				</div>
-			</div>
+			</div>*@
 
 			<div class="row">
 				<div class="col">
-					<h5 class="checkout-title-disabled">Resumo e Finalização</h5>
+					<h5 class="checkout-title-disabled">Confirmação e Pagamento</h5>
 				</div>
 			</div>
         </div>

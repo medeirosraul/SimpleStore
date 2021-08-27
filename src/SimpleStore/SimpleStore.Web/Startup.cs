@@ -93,11 +93,11 @@ namespace SimpleStore.Web
             {
                 // Main SimpleStore site route
                 endpoints.MapControllerRoute(
-                       name: "default",
-                       pattern: "{controller=Home}/{action=Index}/{id?}")
+                      name: "default",
+                      pattern: "{controller=Home}/{action=Index}/{id?}")
                 .RequireHost(Configuration["Host"], $"www.{Configuration["Host"]}");
 
-                //// Admin route for Store
+                // Admin route for Store
                 //endpoints.MapAreaControllerRoute(
                 //    name: "default_admin",
                 //    areaName: "Admin",
